@@ -1,8 +1,8 @@
 {
-  "versionName": "1.2.0",
-  "versionCode": 3,
-  "apkUrl": "https://github.com/itriedcoding/DroidOS/releases/download/v1.2.0/droidos-1.2.0-release.apk",
-  "sha256": "a938cd3934f425472d668640ed5230f16cdbb9f3ce9b1bbdb714873f9f86cdaa",
-  "notes": "DroidOS 1.2.0 - automatic update checks, Display, Sound, Location and Date & time settings, plus the MIT licence.",
+  "versionName": "1.3.0",
+  "versionCode": 4,
+  "apkUrl": "https://github.com/itriedcoding/DroidOS/releases/download/v1.3.0/droidos-1.3.0-release.apk",
+  "sha256": "744aee49d8ae731819d137e203af0f110c97565b8dfc78b94c026290d08b3f59",
+  "notes": "DroidOS 1.3.0 - shell bound to a platform service, device tree, kernel power profile and tested thermal policy, plus the AIDL/C/C++/Java/SQL platform layer.",
   "mandatory": false
 }

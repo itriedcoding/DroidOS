@@ -285,7 +285,7 @@ def check_sql():
         connection.execute(
             "INSERT INTO update_history (version_code, version_name, sha256, installed_at)"
             " VALUES (?, ?, ?, ?)",
-            (3, "1.2.0", "a" * 64, 1700000000),
+            (4, "1.3.0", "a" * 64, 1700000000),
         )
         expect_rejected(
             "INSERT INTO update_history (version_code, version_name, sha256, installed_at)"
