@@ -1,0 +1,15 @@
+# Init service for the DroidOS diagnostics helper.
+#
+# Not started at boot: the helper reports state and exits, so running it always would be pointless
+# work on every boot. Start it explicitly when a support bundle is needed:
+#
+#   setprop ctl.start droidos-diagnostics
+#   logcat -s droidos-diagnostics
+
+service droidos-diagnostics /system/bin/droidctl all --json
+    class late_start
+    user shell
+    group shell
+    oneshot
+    disabled
+    seclabel u:r:droidos:s0

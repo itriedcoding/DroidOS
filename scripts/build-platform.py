@@ -322,13 +322,39 @@ def check_sql():
     return 0
 
 
+def check_power():
+    script = os.path.join(ROOT, "scripts", "check-power.py")
+    if not os.path.isfile(script):
+        print("POWER: FAILED (scripts/check-power.py is missing)")
+        return 1
+    return run([sys.executable, script])
+
+
+def check_footprint():
+    script = os.path.join(ROOT, "scripts", "check-footprint.py")
+    if not os.path.isfile(script):
+        print("FOOTPRINT: FAILED (scripts/check-footprint.py is missing)")
+        return 1
+    return run([sys.executable, script, "--budget-mb", "6"])
+
+
 def main(argv):
     strict = "--strict" in argv
     print("DroidOS platform build")
     print("sources: %s" % os.path.relpath(PLATFORM, ROOT))
     print("output:  %s" % os.path.relpath(OUT, ROOT))
 
-    for step in (build_aidl, build_c, build_cxx, build_java, check_sql, assemble_asm, build_rust):
+    for step in (
+        build_aidl,
+        build_c,
+        build_cxx,
+        build_java,
+        check_sql,
+        check_power,
+        check_footprint,
+        assemble_asm,
+        build_rust,
+    ):
         code = step()
         if code != 0:
             print("platform layer: FAILED (%s)" % step.__name__)

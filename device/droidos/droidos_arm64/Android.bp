@@ -1,0 +1,18 @@
+// Prebuilt shell APK for the device image.
+//
+// The APK is produced by Gradle, not Soong, because the shell is a Compose application. Stage it
+// with scripts/stage-prebuilt.sh, which copies the release build here and prints its checksum:
+//
+//   bash scripts/stage-prebuilt.sh
+//
+// The staged file is git-ignored, so the repository stays small and no binary copy can drift from
+// the source that produced it.
+
+android_app_import {
+    name: "DroidOSShell",
+    apk: "prebuilt/DroidOSShell.apk",
+    presigned: true,
+    dex_preopt: {
+        enabled: false,
+    },
+}

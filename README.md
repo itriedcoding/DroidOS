@@ -241,6 +241,46 @@ vendored here; [platform/README.md](platform/README.md) has the full verificatio
 
 ---
 
+## Vendor tree, kernel and power
+
+`device/` and `kernel/` are the Android-side integration: what a device image needs beyond the APK.
+
+| Path | What it is |
+| --- | --- |
+| `device/droidos/droidos_arm64/{AndroidProducts,device,BoardConfig}.mk` | Product and board definition inheriting `aosp_arm64`: ARM64, kernel source and fragment paths, SELinux policy directory |
+| `device/droidos/droidos_arm64/Android.bp` | `android_app_import` that places the shell APK on the image |
+| `device/droidos/droidos_arm64/init.droidos.rc` | On-demand `droidctl` service, disabled at boot, labelled `u:r:droidos:s0` |
+| `kernel/droidos_power.config` | Kernel fragment: schedutil, CPU thermal, step-wise governor; KASAN, ftrace and debug page alloc off |
+| `kernel/Makefile` | `make image` wrapper that runs defconfig, merges the fragment, then builds `Image.gz` |
+| `platform/power/thermal.conf`, `thermal_policy.py` | Thermal bands plus the tested logic that turns a temperature into a clock cap and governor |
+| `scripts/{check-power,check-footprint,stage-prebuilt,aosp-link}` | Policy tests, APK size budget, APK staging, AOSP linking |
+
+**AOSP and the kernel are not vendored, deliberately.** Together they are hundreds of gigabytes,
+they build only on Linux, and a stub copy would be the fake this project avoids. `scripts/aosp-link.sh`
+links these directories into a tree you sync yourself, which is how device trees are distributed:
+
+```bash
+repo init -u https://android.googlesource.com/platform/manifest -b android-15.0.0_r1
+repo sync -c -j8                                 # ~200 GB, Linux host
+bash scripts/stage-prebuilt.sh                   # shell APK into the device tree
+ANDROID_BUILD_TOP=$PWD/aosp bash scripts/aosp-link.sh
+cd aosp && . build/envsetup.sh && lunch droidos_arm64-userdebug && m
+```
+
+Nothing in `device/` or `kernel/` has been built: no Linux host, no `make`, no AArch64 cross
+compiler and no AOSP tree on this machine. It is source for a real build, not a claim of one.
+
+### Staying light and cool
+
+The image is ARM64-only with no optional AOSP test packages, the shell APK is 3.6 MiB, and the
+kernel fragment enables thermal management while dropping KASAN, UBSAN, ftrace and debug page
+allocation. The thermal table stays fully open below 45 C and steps the CPU cap down from there, so
+sustained load throttles instead of shutting the phone down; its logic is unit-tested and
+`scripts/check-footprint.py` fails a build that grows past 6 MiB. The sysfs writes in
+`apply-thermal.sh` have not run on hardware here.
+
+---
+
 ## Security model
 
 | Concern | What DroidOS actually does |
