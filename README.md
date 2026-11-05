@@ -13,7 +13,8 @@ and every failure path reports what actually happened instead of pretending to s
 
 **It is** a complete launcher-replacement shell plus first-party applications:
 a real `HOME` app that replaces your launcher, notification shade, lock screen, quick settings,
-recents view, file manager, notes app, encrypted vault, security scanner, firewall and calculator.
+recents view, file manager, notes app, encrypted vault, security scanner, firewall, calculator,
+terminal and sensor reader.
 
 **It is not** a fork of the Android kernel or framework. Verified boot, full-disk encryption
 and the app sandbox come from the Android platform and the device firmware. A normal application
@@ -47,6 +48,13 @@ the kind of fake feature this project avoids.
 * **Firewall** — per-app network blocking through a local, non-forwarding `VpnService`
 * **Privacy** — live camera/microphone indicators, system-wide mic mute, permission holders
 * **Calculator** — recursive-descent expression evaluator with live preview
+* **Terminal** — real `sh` commands through `ProcessBuilder("/system/bin/sh", "-c", …)`, with
+  stdout and stderr kept apart, the process's own exit code, a cancel action and a timeout.
+  The shell runs as the app's UID inside the app sandbox, so system-only commands fail with the
+  kernel's permission error instead of printing something invented. There is no fake root
+* **Sensors** — every sensor the device's `SensorManager` actually reports, with live values in
+  their real units plus vendor, range, resolution and power. Sensors the hardware lacks are not
+  listed, and a refused listener is reported as such
 * **Clock** — alarms through `AlarmManager.setAlarmClock`, a timer that finishes in the
   background, and a stopwatch with laps. Exact alarms need the user-granted
   `SCHEDULE_EXACT_ALARM`, and Android cancels pending alarms if the app is force-stopped
@@ -309,7 +317,8 @@ against a rooted device, a malicious OS build, or an attacker with the device un
 Unit tests cover the pure logic: expression parsing and precedence, vault container round-trip
 and tamper rejection, PIN hashing and lockout policy, risk-rule behaviour and thresholds,
 firewall allow-list maths, volume step mapping, stopwatch accumulation, alarm next-occurrence
-scheduling, version comparison and formatting.
+scheduling, version comparison and formatting, terminal command parsing (quoting, `cd` path
+resolution, builtin detection, exit labels) and sensor label/unit formatting.
 
 Instrumented tests (`app/src/androidTest`) require a device or emulator:
 
@@ -338,7 +347,7 @@ $ANDROID_HOME/build-tools/35.0.0/apksigner verify --print-certs \
 ```
 
 The `sha256` committed in `updates/channel.json` is the checksum of the release build above - the
-same file attached to release `v1.4.0`. Recompute it (`sha256sum`, or `shasum -a 256`) if you
+same file attached to release `v1.5.0`. Recompute it (`sha256sum`, or `shasum -a 256`) if you
 upload a different artifact, otherwise installed clients will reject the update.
 
 ---
@@ -350,10 +359,10 @@ must contain a valid `sha256` of the published APK. Replace the values and uploa
 to the URL in `apkUrl` when you publish a release; clients reject anything whose checksum or
 signing certificate does not match.
 
-Release `v1.4.0` carries `droidos-1.4.0-release.apk`, so an update check runs end to end:
+Release `v1.5.0` carries `droidos-1.5.0-release.apk`, so an update check runs end to end:
 manifest fetched, checksum compared, signing certificate matched against the installed app, and
 the system installer invoked. Download it from
-https://github.com/itriedcoding/DroidOS/releases/download/v1.4.0/droidos-1.4.0-release.apk
+https://github.com/itriedcoding/DroidOS/releases/download/v1.5.0/droidos-1.5.0-release.apk
 
 ---
 

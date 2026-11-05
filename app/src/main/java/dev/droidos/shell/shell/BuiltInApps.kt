@@ -7,7 +7,9 @@ import androidx.compose.material.icons.rounded.BugReport
 import androidx.compose.material.icons.rounded.Calculate
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material.icons.rounded.Lock
+import androidx.compose.material.icons.rounded.Sensors
 import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.Terminal
 import androidx.compose.material.icons.rounded.Shield
 import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.ui.graphics.Color
@@ -55,6 +57,14 @@ object BuiltInApps {
         BuiltInApp(
             Screen.PRIVACY, "Privacy", Icons.Rounded.Visibility, Color(0xFF6FE3FF),
             "Live sensor indicators"
+        ),
+        BuiltInApp(
+            Screen.TERMINAL, "Terminal", Icons.Rounded.Terminal, Color(0xFFFF2D78),
+            "Real shell in the app sandbox"
+        ),
+        BuiltInApp(
+            Screen.SENSORS, "Sensors", Icons.Rounded.Sensors, Color(0xFFFF9EC4),
+            "Live readings from device sensors"
         ),
         BuiltInApp(
             Screen.SETTINGS, "Settings", Icons.Rounded.Settings, Color(0xFF8FB4FF),

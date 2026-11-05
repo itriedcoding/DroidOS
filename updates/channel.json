@@ -1,8 +1,8 @@
 {
-  "versionName": "1.4.0",
-  "versionCode": 5,
-  "apkUrl": "https://github.com/itriedcoding/DroidOS/releases/download/v1.4.0/droidos-1.4.0-release.apk",
-  "sha256": "16822196f90f98a714d29a23222bb6606a5cd7b6a79e68b1fc12de08c99ae3a7",
-  "notes": "DroidOS 1.4.0 - hot pink on black with white text and gradient surfaces, and System update now reads the published release page, cross-checked against the manifest checksum.",
+  "versionName": "1.5.0",
+  "versionCode": 6,
+  "apkUrl": "https://github.com/itriedcoding/DroidOS/releases/download/v1.5.0/droidos-1.5.0-release.apk",
+  "sha256": "1d0a21f675b5ee127dc1bb892b45500d3737f615863ee40f18c5da7ea0da01fe",
+  "notes": "DroidOS 1.5.0 - two new apps: a Terminal that runs real /system/bin/sh commands with true exit codes and stderr, and a Sensors reader showing every sensor your device reports with live values in real units.",
   "mandatory": false
 }

@@ -31,6 +31,8 @@ import dev.droidos.shell.apps.files.FilesScreen
 import dev.droidos.shell.apps.notes.NotesScreen
 import dev.droidos.shell.apps.privacy.PrivacyScreen
 import dev.droidos.shell.apps.scanner.ScannerScreen
+import dev.droidos.shell.apps.sensors.SensorsScreen
+import dev.droidos.shell.apps.terminal.TerminalScreen
 import dev.droidos.shell.apps.vault.VaultScreen
 import dev.droidos.shell.firewall.FirewallScreen
 import dev.droidos.shell.settings.AboutScreen
@@ -205,6 +207,8 @@ private fun ShellContent(
         Screen.CLOCK -> ClockScreen(onBack = back)
         Screen.FIREWALL -> FirewallScreen(onBack = back)
         Screen.PRIVACY -> PrivacyScreen(onBack = back)
+        Screen.TERMINAL -> TerminalScreen(onBack = back)
+        Screen.SENSORS -> SensorsScreen(onBack = back)
     }
 }
 
