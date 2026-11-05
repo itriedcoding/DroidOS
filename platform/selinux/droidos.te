@@ -1,0 +1,33 @@
+# SELinux domain for the DroidOS platform helper (droidctl) and the platform service.
+#
+# This file belongs in system/sepolicy under a device tree (for example device/<vendor>/<device>/
+# sepolicy/) and is compiled by checkpolicy/secilc as part of an AOSP build. It is not compiled by
+# the Gradle build or by scripts/build-platform.py: no SELinux toolchain is installed on the
+# development host, so treat it as source to be validated with:
+#   m selinux_policy
+#   or, standalone: checkpolicy -M -c 30 -o policy.30 droidos.te
+#
+# The domain is deliberately narrow: it may read the kernel interfaces droidctl reports on and
+# nothing else. It is not permissive; every access it needs is stated below.
+
+type droidos, domain;
+type droidos_exec, exec_type, file_type, system_file_type;
+
+# Started by init from /system/bin/droidctl; standard daemon transition.
+init_daemon_domain(droidos, droidos_exec)
+
+# Diagnostics the helper reports: uptime, memory and the SELinux enforcement flag.
+allow droidos proc_uptime:file r_file_perms;
+allow droidos proc_meminfo:file r_file_perms;
+allow droidos selinuxfs:file r_file_perms;
+allow droidos proc:file r_file_perms;
+
+# Its own executable, and the ability to write diagnostics to the log.
+allow droidos droidos_exec:file rx_file_perms;
+allow droidos droidos:fd use;
+allow droidos droidos:fifo_file rw_file_perms;
+
+# Nothing may inspect or control this domain from outside, and it may not touch other domains.
+neverallow { domain -droidos -init } droidos:process *;
+neverallow droidos { domain -self }:ptrace;
+neverallow droidos system_file:file write;

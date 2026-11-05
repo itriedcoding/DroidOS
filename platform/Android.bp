@@ -1,0 +1,67 @@
+// Soong (Blueprint) definitions for the DroidOS platform layer.
+//
+// Place this directory in an AOSP checkout as droidos/platform/ and build with:
+//   m droidctl
+//   m libdroidnetfilter droidnetfilter_test
+//   m libdroidpolicy
+//   m droidos.platform-java        # generated AIDL bindings
+//
+// Soong itself only exists inside an AOSP tree, so these modules are consumed there, not by the
+// Gradle build. scripts/build-platform.py compiles the same sources directly on a developer
+// machine to keep them honest outside AOSP.
+
+aidl_interface {
+    name: "droidos.platform",
+    unstable: true,
+    srcs: [
+        "aidl/dev/droidos/platform/IDroidPlatformService.aidl",
+        "aidl/dev/droidos/platform/IPrivacyEventCallback.aidl",
+    ],
+    local_include_dir: "aidl",
+    vendor_available: true,
+}
+
+cc_binary_host {
+    name: "droidctl",
+    srcs: ["native/droidctl.c"],
+    cflags: [
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+    ],
+}
+
+cc_library_static {
+    name: "libdroidnetfilter",
+    srcs: ["native/netfilter_rules.c"],
+    export_include_dirs: ["native"],
+    cflags: [
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+    ],
+    vendor_available: true,
+}
+
+cc_test {
+    name: "droidnetfilter_test",
+    srcs: ["native/netfilter_rules_test.c"],
+    static_libs: ["libdroidnetfilter"],
+    export_include_dirs: ["native"],
+    cflags: [
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+    ],
+}
+
+rust_library {
+    name: "libdroidpolicy",
+    crate_name: "droidpolicy",
+    srcs: ["rust/droidpolicy/src/lib.rs"],
+    edition: "2021",
+    vendor_available: true,
+}

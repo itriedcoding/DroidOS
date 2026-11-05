@@ -1,0 +1,9 @@
+[package]
+name = "droidpolicy"
+version = "0.1.0"
+edition = "2021"
+description = "Permission risk scoring for the DroidOS platform layer"
+license = "MIT"
+publish = false
+
+[dependencies]

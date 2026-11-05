@@ -188,6 +188,39 @@ Design notes:
 
 ---
 
+## Platform layer
+
+`app/` is the shell. `platform/` holds the system-side source that would ship in a device image
+rather than in an APK, written in the languages a platform actually uses:
+
+| Stack | Where | What it does |
+| --- | --- | --- |
+| C11 | `platform/native/droidctl.c` | Kernel diagnostics helper reading `/proc/uptime`, `/proc/meminfo` and `/sys/fs/selinux/enforce`; a value the kernel does not expose is reported as unavailable, never invented |
+| C11 | `platform/native/netfilter_rules.c` | Renders the nftables/iptables rule that drops egress for one application UID |
+| AIDL | `platform/aidl/dev/droidos/platform/` | `IDroidPlatformService`: API version, build fingerprint, firewall state, UID blocklist, privacy callbacks |
+| Rust | `platform/rust/droidpolicy` | Dependency-free capability risk scoring with unit tests |
+| SELinux | `platform/selinux/droidos.te` | Unprivileged domain for the helper: explicit allows, `neverallow` guards, no permissive mode |
+| Blueprint | `platform/Android.bp` | Soong modules for every module above |
+| SQL | `platform/sql/schema.sql` | Blocklist, privacy-event and update-history tables with CHECK constraints and indexes |
+| Python, Bash | `scripts/build-platform.py`, `scripts/build.sh` | Build drivers that run the real compilers and return their exit status |
+
+```bash
+python scripts/build-platform.py          # compile and test everything this host supports
+python scripts/build-platform.py --strict # fail if a toolchain is missing
+```
+
+The driver compiles the AIDL interfaces with the SDK `aidl` tool, builds the C with
+`-Wall -Wextra -Werror`, runs `droidctl --selftest` plus the 16 netfilter rule checks, applies the
+SQL schema twice to an in-memory database and asserts every constraint, index and the
+idempotency, and runs `cargo test` when Rust is present.
+
+What this machine could not compile is reported honestly rather than claimed: the Rust crate (no
+cargo), the SELinux policy (needs `checkpolicy`/`secilc`) and `Android.bp` (needs Soong) are
+reported as `SKIPPED`. There is no kernel or bootable image in this repository, and AOSP is not
+vendored here; [platform/README.md](platform/README.md) has the full verification matrix.
+
+---
+
 ## Security model
 
 | Concern | What DroidOS actually does |
@@ -283,8 +316,3 @@ repository does not include or redistribute the Android platform or Google's app
 
 Logs and crash reports are visible in **Settings → System → Diagnostics**.
 
----
-
-## License
-
-No license file is included; add one before distributing binaries.
