@@ -57,9 +57,18 @@ android {
         freeCompilerArgs += listOf("-opt-in=kotlin.RequiresOptIn")
     }
 
+    sourceSets {
+        getByName("main") {
+            // The platform interfaces are compiled from platform/aidl, so a device image and the
+            // shell share one definition instead of two copies that drift apart.
+            aidl.srcDir("${rootDir}/platform/aidl")
+        }
+    }
+
     buildFeatures {
         compose = true
         buildConfig = true
+        aidl = true
     }
 
     testOptions {

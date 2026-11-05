@@ -109,6 +109,16 @@ fun PrivacyScreen(onBack: () -> Unit) {
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
+                        // Only a device image with the platform service can attribute a capture to
+                        // a package; elsewhere this line is simply absent.
+                        state.attributedPackage?.let { pkg ->
+                            Spacer(Modifier.height(6.dp))
+                            Text(
+                                "Platform attribution: ${ServiceLocator.apps.labelFor(pkg)}",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
                 }
             }

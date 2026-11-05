@@ -219,6 +219,20 @@ applies the SQL schema twice to an in-memory database and asserts every constrai
 idempotency, assembles the ARM64 sources when an AArch64 assembler exists, and runs `cargo test`
 when Rust is present.
 
+### How the shell uses it
+
+The shell compiles the same AIDL (`app/build.gradle.kts` points at `platform/aidl`; there is no
+second copy) and `PlatformBridge` binds to `dev.droidos.platform.PlatformServiceHost` with an
+explicit component name. Three outcomes, all truthful:
+
+* **Bound** — the bridge checks `getApiVersion()` against the surface it understands and refuses a
+  newer one. Firewall rules are installed through `applyUidBlocklist` (package names resolved to
+  real UIDs by the package manager) and privacy transitions arrive with platform attribution.
+* **No such app** — a retail phone returns `false` from `bindService`. Every call then reports
+  unavailable, the in-process VPN tunnel stays the only blocker, and the Privacy screen shows no
+  attribution line rather than an invented one.
+* **Disconnected or wrong version** — treated exactly like the second case, with the reason logged.
+
 What this machine could not compile is reported honestly rather than claimed: the AArch64
 assembly (no ARM64 assembler), the Rust crate (no cargo), the SELinux policy (needs
 `checkpolicy`/`secilc`), `Android.bp` (needs Soong) and the Makefile (no make) are reported as

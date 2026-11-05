@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Manifest for the platform app that ships in a DroidOS device image.
+
+  The service is exported but protected by a signature-level permission, so only components signed
+  with the same key as the image can bind to it. The shell is built with the same development key
+  as this project, which is why it can reach the binder in a test image and why the shell's bind
+  simply fails on a retail device where no such app exists.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="dev.droidos.platform">
+
+    <permission
+        android:name="dev.droidos.platform.permission.PLATFORM_SERVICE"
+        android:label="DroidOS platform service"
+        android:protectionLevel="signature" />
+
+    <application
+        android:label="DroidOS Platform"
+        android:directBootAware="true">
+
+        <service
+            android:name="dev.droidos.platform.PlatformServiceHost"
+            android:directBootAware="true"
+            android:exported="true"
+            android:permission="dev.droidos.platform.permission.PLATFORM_SERVICE" />
+    </application>
+
+</manifest>
