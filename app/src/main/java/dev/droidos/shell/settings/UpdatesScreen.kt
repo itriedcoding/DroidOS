@@ -81,16 +81,23 @@ fun UpdatesScreen(onBack: () -> Unit) {
             error = null
             status = null
             available = null
-            when (val result = repository.check()) {
-                is UpdateRepository.CheckResult.Available -> {
-                    available = result
-                    status = "DroidOS ${result.release.versionName} is available"
+            try {
+                when (val result = repository.check()) {
+                    is UpdateRepository.CheckResult.Available -> {
+                        available = result
+                        status = "DroidOS ${result.release.versionName} is available"
+                    }
+                    is UpdateRepository.CheckResult.UpToDate ->
+                        status = "You are on the newest published release"
+                    is UpdateRepository.CheckResult.Failed -> error = result.reason
                 }
-                is UpdateRepository.CheckResult.UpToDate -> status = "You are on the newest published release"
-                is UpdateRepository.CheckResult.Failed -> error = result.reason
+                lastCheck = System.currentTimeMillis()
+            } catch (e: Exception) {
+                // Keep the button usable and say what actually broke instead of spinning forever.
+                error = "Update check failed: ${e.message ?: e::class.java.simpleName}"
+            } finally {
+                checking = false
             }
-            lastCheck = System.currentTimeMillis()
-            checking = false
         }
     }
 
@@ -275,18 +282,23 @@ fun UpdatesScreen(onBack: () -> Unit) {
                                     scope.launch {
                                         downloading = true
                                         error = null
-                                        when (val result = repository.download(manifest)) {
-                                            is UpdateRepository.DownloadResult.Ready -> {
-                                                when (val install = repository.install(result.apk)) {
-                                                    is dev.droidos.shell.core.Outcome.Err ->
-                                                        error = install.message
-                                                    is dev.droidos.shell.core.Outcome.Ok ->
-                                                        status = "Verified - confirm the install in the system dialog"
+                                        try {
+                                            when (val result = repository.download(manifest)) {
+                                                is UpdateRepository.DownloadResult.Ready -> {
+                                                    when (val install = repository.install(result.apk)) {
+                                                        is dev.droidos.shell.core.Outcome.Err ->
+                                                            error = install.message
+                                                        is dev.droidos.shell.core.Outcome.Ok ->
+                                                            status = "Verified - confirm the install in the system dialog"
+                                                    }
                                                 }
+                                                is UpdateRepository.DownloadResult.Failed -> error = result.reason
                                             }
-                                            is UpdateRepository.DownloadResult.Failed -> error = result.reason
+                                        } catch (e: Exception) {
+                                            error = "Download failed: ${e.message ?: e::class.java.simpleName}"
+                                        } finally {
+                                            downloading = false
                                         }
-                                        downloading = false
                                     }
                                 },
                                 enabled = !downloading,

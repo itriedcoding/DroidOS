@@ -27,12 +27,18 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.droidos.shell.apps.calculator.CalculatorScreen
 import dev.droidos.shell.apps.clock.ClockScreen
+import dev.droidos.shell.apps.compass.CompassScreen
+import dev.droidos.shell.apps.convert.ConvertScreen
+import dev.droidos.shell.apps.digest.DigestScreen
 import dev.droidos.shell.apps.files.FilesScreen
+import dev.droidos.shell.apps.ledger.LedgerScreen
+import dev.droidos.shell.apps.netcheck.NetcheckScreen
 import dev.droidos.shell.apps.notes.NotesScreen
 import dev.droidos.shell.apps.privacy.PrivacyScreen
 import dev.droidos.shell.apps.scanner.ScannerScreen
 import dev.droidos.shell.apps.sensors.SensorsScreen
 import dev.droidos.shell.apps.terminal.TerminalScreen
+import dev.droidos.shell.apps.texttools.TextToolsScreen
 import dev.droidos.shell.apps.vault.VaultScreen
 import dev.droidos.shell.firewall.FirewallScreen
 import dev.droidos.shell.settings.AboutScreen
@@ -209,6 +215,12 @@ private fun ShellContent(
         Screen.PRIVACY -> PrivacyScreen(onBack = back)
         Screen.TERMINAL -> TerminalScreen(onBack = back)
         Screen.SENSORS -> SensorsScreen(onBack = back)
+        Screen.CONVERT -> ConvertScreen(onBack = back)
+        Screen.DIGEST -> DigestScreen(onBack = back)
+        Screen.TEXT_TOOLS -> TextToolsScreen(onBack = back)
+        Screen.COMPASS -> CompassScreen(onBack = back)
+        Screen.NETCHECK -> NetcheckScreen(onBack = back)
+        Screen.LEDGER -> LedgerScreen(onBack = back)
     }
 }
 

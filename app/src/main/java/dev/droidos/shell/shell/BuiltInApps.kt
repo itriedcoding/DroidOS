@@ -2,15 +2,21 @@ package dev.droidos.shell.shell
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Notes
+import androidx.compose.material.icons.rounded.AccountBalanceWallet
 import androidx.compose.material.icons.rounded.Alarm
 import androidx.compose.material.icons.rounded.BugReport
 import androidx.compose.material.icons.rounded.Calculate
+import androidx.compose.material.icons.rounded.Explore
+import androidx.compose.material.icons.rounded.Fingerprint
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material.icons.rounded.Lock
+import androidx.compose.material.icons.rounded.NetworkCheck
 import androidx.compose.material.icons.rounded.Sensors
 import androidx.compose.material.icons.rounded.Settings
-import androidx.compose.material.icons.rounded.Terminal
 import androidx.compose.material.icons.rounded.Shield
+import androidx.compose.material.icons.rounded.Straighten
+import androidx.compose.material.icons.rounded.Terminal
+import androidx.compose.material.icons.rounded.TextFields
 import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -65,6 +71,30 @@ object BuiltInApps {
         BuiltInApp(
             Screen.SENSORS, "Sensors", Icons.Rounded.Sensors, Color(0xFFFF9EC4),
             "Live readings from device sensors"
+        ),
+        BuiltInApp(
+            Screen.CONVERT, "Convert", Icons.Rounded.Straighten, Color(0xFF7CE38B),
+            "Length, mass, temperature, data, speed, time"
+        ),
+        BuiltInApp(
+            Screen.DIGEST, "Digest", Icons.Rounded.Fingerprint, Color(0xFF9FE8FF),
+            "SHA digests, Base64 and UUIDs"
+        ),
+        BuiltInApp(
+            Screen.TEXT_TOOLS, "Text tools", Icons.Rounded.TextFields, Color(0xFFFFC76B),
+            "Counts, case changes, regex replace"
+        ),
+        BuiltInApp(
+            Screen.COMPASS, "Compass", Icons.Rounded.Explore, Color(0xFFFFB0CF),
+            "Heading from the rotation vector"
+        ),
+        BuiltInApp(
+            Screen.NETCHECK, "Netcheck", Icons.Rounded.NetworkCheck, Color(0xFF8AFFD6),
+            "Real DNS, TCP and HTTPS probes"
+        ),
+        BuiltInApp(
+            Screen.LEDGER, "Ledger", Icons.Rounded.AccountBalanceWallet, Color(0xFFC3A6FF),
+            "Local income and spending totals"
         ),
         BuiltInApp(
             Screen.SETTINGS, "Settings", Icons.Rounded.Settings, Color(0xFF8FB4FF),

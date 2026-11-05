@@ -35,7 +35,13 @@ enum class Screen(val title: String) {
     FIREWALL("Firewall"),
     PRIVACY("Privacy"),
     TERMINAL("Terminal"),
-    SENSORS("Sensors")
+    SENSORS("Sensors"),
+    CONVERT("Convert"),
+    DIGEST("Digest"),
+    TEXT_TOOLS("Text tools"),
+    COMPASS("Compass"),
+    NETCHECK("Netcheck"),
+    LEDGER("Ledger")
 }
 
 /** Simple, predictable back stack. Home is always at the bottom. */

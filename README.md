@@ -14,7 +14,7 @@ and every failure path reports what actually happened instead of pretending to s
 **It is** a complete launcher-replacement shell plus first-party applications:
 a real `HOME` app that replaces your launcher, notification shade, lock screen, quick settings,
 recents view, file manager, notes app, encrypted vault, security scanner, firewall, calculator,
-terminal and sensor reader.
+terminal, sensor reader, converter, digest tools, text tools, compass, netcheck and ledger.
 
 **It is not** a fork of the Android kernel or framework. Verified boot, full-disk encryption
 and the app sandbox come from the Android platform and the device firmware. A normal application
@@ -55,6 +55,19 @@ the kind of fake feature this project avoids.
 * **Sensors** — every sensor the device's `SensorManager` actually reports, with live values in
   their real units plus vendor, range, resolution and power. Sensors the hardware lacks are not
   listed, and a refused listener is reported as such
+* **Convert** — length, mass, temperature, data, speed and time through one base unit per
+  category, so there is no pairwise factor matrix to get wrong. Amounts parse with grouping and
+  the result is formatted to useful digits
+* **Digest** — SHA-256, SHA-1 and MD5 through the platform's `MessageDigest`, Base64 encode/decode
+  with an explicit error for invalid input, and UUID v4 values
+* **Text tools** — characters, words, lines and sentences, case transforms, slug and line
+  sorting, and regex replace that reports an invalid pattern instead of returning nothing
+* **Compass** — azimuth from `SensorManager`'s rotation vector and `getOrientation`, smoothed along
+  the shortest arc so the needle does not spin at north, with the sensor's own accuracy value
+* **Netcheck** — a real DNS lookup, a real TCP connect and a real HTTPS request against a host you
+  type, each timed, with the platform's error text when one fails
+* **Ledger** — income and spending in integer cents in a local SQLite database, with totals that
+  cannot accumulate rounding error
 * **Clock** — alarms through `AlarmManager.setAlarmClock`, a timer that finishes in the
   background, and a stopwatch with laps. Exact alarms need the user-granted
   `SCHEDULE_EXACT_ALARM`, and Android cancels pending alarms if the app is force-stopped
@@ -318,7 +331,9 @@ Unit tests cover the pure logic: expression parsing and precedence, vault contai
 and tamper rejection, PIN hashing and lockout policy, risk-rule behaviour and thresholds,
 firewall allow-list maths, volume step mapping, stopwatch accumulation, alarm next-occurrence
 scheduling, version comparison and formatting, terminal command parsing (quoting, `cd` path
-resolution, builtin detection, exit labels) and sensor label/unit formatting.
+resolution, builtin detection, exit labels), sensor label/unit formatting, unit conversion factors,
+SHA/Base64 known-answer vectors, text statistics and regex replacement, compass cardinal names and
+circular smoothing, and money parsing with ledger totals.
 
 Instrumented tests (`app/src/androidTest`) require a device or emulator:
 
@@ -347,7 +362,7 @@ $ANDROID_HOME/build-tools/35.0.0/apksigner verify --print-certs \
 ```
 
 The `sha256` committed in `updates/channel.json` is the checksum of the release build above - the
-same file attached to release `v1.5.0`. Recompute it (`sha256sum`, or `shasum -a 256`) if you
+same file attached to release `v1.6.0`. Recompute it (`sha256sum`, or `shasum -a 256`) if you
 upload a different artifact, otherwise installed clients will reject the update.
 
 ---
@@ -359,10 +374,10 @@ must contain a valid `sha256` of the published APK. Replace the values and uploa
 to the URL in `apkUrl` when you publish a release; clients reject anything whose checksum or
 signing certificate does not match.
 
-Release `v1.5.0` carries `droidos-1.5.0-release.apk`, so an update check runs end to end:
+Release `v1.6.0` carries `droidos-1.6.0-release.apk`, so an update check runs end to end:
 manifest fetched, checksum compared, signing certificate matched against the installed app, and
 the system installer invoked. Download it from
-https://github.com/itriedcoding/DroidOS/releases/download/v1.5.0/droidos-1.5.0-release.apk
+https://github.com/itriedcoding/DroidOS/releases/download/v1.6.0/droidos-1.6.0-release.apk
 
 ---
 

@@ -2,4 +2,7 @@
 <paths>
     <files-path name="vault_export" path="exports/" />
     <cache-path name="cache_share" path="share/" />
+    <!-- The update APK is downloaded to cacheDir/updates; without this root the installer
+         intent throws "Failed to find configured root" and every update fails to install. -->
+    <cache-path name="updates" path="updates/" />
 </paths>

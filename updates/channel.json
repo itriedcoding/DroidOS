@@ -1,8 +1,8 @@
 {
-  "versionName": "1.5.0",
-  "versionCode": 6,
-  "apkUrl": "https://github.com/itriedcoding/DroidOS/releases/download/v1.5.0/droidos-1.5.0-release.apk",
-  "sha256": "1d0a21f675b5ee127dc1bb892b45500d3737f615863ee40f18c5da7ea0da01fe",
-  "notes": "DroidOS 1.5.0 - two new apps: a Terminal that runs real /system/bin/sh commands with true exit codes and stderr, and a Sensors reader showing every sensor your device reports with live values in real units.",
+  "versionName": "1.6.0",
+  "versionCode": 7,
+  "apkUrl": "https://github.com/itriedcoding/DroidOS/releases/download/v1.6.0/droidos-1.6.0-release.apk",
+  "sha256": "073cfed6827634194915999a7ff882fdfda0cf255cfec6757563954ec9962414",
+  "notes": "DroidOS 1.6.0 - six new apps: Convert, Digest, Text tools, Compass, Netcheck and Ledger. Also fixes the update installer, which failed because the FileProvider had no root for the downloaded APK.",
   "mandatory": false
 }
