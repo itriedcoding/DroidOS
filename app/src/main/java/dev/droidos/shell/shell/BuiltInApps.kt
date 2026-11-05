@@ -1,11 +1,12 @@
 package dev.droidos.shell.shell
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.Notes
+import androidx.compose.material.icons.rounded.Alarm
 import androidx.compose.material.icons.rounded.BugReport
 import androidx.compose.material.icons.rounded.Calculate
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material.icons.rounded.Lock
-import androidx.compose.material.icons.rounded.Notes
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Shield
 import androidx.compose.material.icons.rounded.Visibility
@@ -28,12 +29,16 @@ object BuiltInApps {
             "Browse and manage documents"
         ),
         BuiltInApp(
-            Screen.NOTES, "Notes", Icons.Rounded.Notes, Color(0xFF3BD6A6),
+            Screen.NOTES, "Notes", Icons.AutoMirrored.Rounded.Notes, Color(0xFF3BD6A6),
             "Write and search notes"
         ),
         BuiltInApp(
             Screen.VAULT, "Vault", Icons.Rounded.Lock, Color(0xFFA87BFF),
             "Encrypted private storage"
+        ),
+        BuiltInApp(
+            Screen.CLOCK, "Clock", Icons.Rounded.Alarm, Color(0xFFFF9F6B),
+            "Alarms, timer and stopwatch"
         ),
         BuiltInApp(
             Screen.SCANNER, "Scan", Icons.Rounded.BugReport, Color(0xFFFFB454),

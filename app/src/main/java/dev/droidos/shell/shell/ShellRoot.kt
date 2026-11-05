@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.droidos.shell.apps.calculator.CalculatorScreen
+import dev.droidos.shell.apps.clock.ClockScreen
 import dev.droidos.shell.apps.files.FilesScreen
 import dev.droidos.shell.apps.notes.NotesScreen
 import dev.droidos.shell.apps.privacy.PrivacyScreen
@@ -47,6 +48,7 @@ import dev.droidos.shell.settings.UpdatesScreen
 import dev.droidos.shell.shell.drawer.AppDrawer
 import dev.droidos.shell.shell.drawer.RecentsScreen
 import dev.droidos.shell.shell.home.HomeScreen
+import dev.droidos.shell.shell.search.SearchScreen
 import dev.droidos.shell.shell.shade.Shade
 import dev.droidos.shell.ui.components.MessageBanner
 import dev.droidos.shell.ui.theme.DroidWallpaper
@@ -168,6 +170,12 @@ private fun ShellContent(
             onLaunchApp = launch
         )
 
+        Screen.SEARCH -> SearchScreen(
+            onBack = back,
+            onOpenScreen = open,
+            onLaunchApp = launch
+        )
+
         Screen.SETTINGS -> SettingsScreen(onBack = back, onOpenScreen = open, viewModel = viewModel)
         Screen.APPEARANCE -> AppearanceScreen(onBack = back, viewModel = viewModel)
         Screen.NETWORK -> NetworkScreen(onBack = back)
@@ -186,6 +194,7 @@ private fun ShellContent(
         Screen.VAULT -> VaultScreen(onBack = back)
         Screen.SCANNER -> ScannerScreen(onBack = back)
         Screen.CALCULATOR -> CalculatorScreen(onBack = back)
+        Screen.CLOCK -> ClockScreen(onBack = back)
         Screen.FIREWALL -> FirewallScreen(onBack = back)
         Screen.PRIVACY -> PrivacyScreen(onBack = back)
     }

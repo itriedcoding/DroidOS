@@ -1,6 +1,7 @@
 package dev.droidos.shell.shell
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -105,6 +106,13 @@ fun LockScreen(viewModel: ShellViewModel) {
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Spacer(Modifier.height(24.dp))
+            Text(
+                "DROIDOS",
+                style = MaterialTheme.typography.labelSmall,
+                letterSpacing = 3.5.sp,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.45f)
+            )
+            Spacer(Modifier.height(16.dp))
             Icon(
                 Icons.Rounded.Lock,
                 contentDescription = null,
@@ -144,7 +152,7 @@ fun LockScreen(viewModel: ShellViewModel) {
                 repeat(6) { index ->
                     Box(
                         Modifier
-                            .size(12.dp)
+                            .size(width = 22.dp, height = 7.dp)
                             .clip(CircleShape)
                             .background(
                                 if (index < pin.length) MaterialTheme.colorScheme.primary
@@ -222,7 +230,8 @@ private fun KeypadKey(label: String, onClick: () -> Unit) {
         modifier = Modifier
             .size(72.dp)
             .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.08f))
+            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.62f))
+            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f), CircleShape)
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
@@ -257,6 +266,12 @@ private fun UnlockButton(enabled: Boolean, onClick: () -> Unit) {
             .background(
                 if (enabled) MaterialTheme.colorScheme.primary
                 else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.10f)
+            )
+            .border(
+                1.dp,
+                if (enabled) MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
+                else MaterialTheme.colorScheme.outline.copy(alpha = 0.3f),
+                RoundedCornerShape(26.dp)
             )
             .clickable(enabled = enabled) { onClick() },
         contentAlignment = Alignment.Center

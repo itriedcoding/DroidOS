@@ -47,6 +47,9 @@ the kind of fake feature this project avoids.
 * **Firewall** — per-app network blocking through a local, non-forwarding `VpnService`
 * **Privacy** — live camera/microphone indicators, system-wide mic mute, permission holders
 * **Calculator** — recursive-descent expression evaluator with live preview
+* **Clock** — alarms through `AlarmManager.setAlarmClock`, a timer that finishes in the
+  background, and a stopwatch with laps. Exact alarms need the user-granted
+  `SCHEDULE_EXACT_ALARM`, and Android cancels pending alarms if the app is force-stopped
 
 ### Quick settings and notifications
 * Volume mixer for the media, ring and alarm streams, driven by `AudioManager`, with per-stream mute
@@ -56,6 +59,10 @@ the kind of fake feature this project avoids.
 ### App drawer
 * Search across built-in apps and installed packages
 * Long-press any app for its info page, uninstall, or to place it behind the lock
+
+### Search
+* One query across built-in tools, installed packages, the notes database and the folder granted to Files
+* Sources that are unavailable are named in the result list, never filled with invented entries
 
 ### Settings
 Appearance, Wi-Fi & Bluetooth, Battery, Storage, Accessibility, Installed apps,
@@ -206,7 +213,8 @@ against a rooted device, a malicious OS build, or an attacker with the device un
 
 Unit tests cover the pure logic: expression parsing and precedence, vault container round-trip
 and tamper rejection, PIN hashing and lockout policy, risk-rule behaviour and thresholds,
-firewall allow-list maths, volume step mapping, version comparison and formatting.
+firewall allow-list maths, volume step mapping, stopwatch accumulation, alarm next-occurrence
+scheduling, version comparison and formatting.
 
 Instrumented tests (`app/src/androidTest`) require a device or emulator:
 
@@ -235,7 +243,7 @@ $ANDROID_HOME/build-tools/35.0.0/apksigner verify --print-certs \
 ```
 
 The `sha256` committed in `updates/channel.json` is the checksum of the release build above - the
-same file attached to release `v1.0.0`. Recompute it (`sha256sum`, or `shasum -a 256`) if you
+same file attached to release `v1.1.0`. Recompute it (`sha256sum`, or `shasum -a 256`) if you
 upload a different artifact, otherwise installed clients will reject the update.
 
 ---
@@ -247,10 +255,10 @@ must contain a valid `sha256` of the published APK. Replace the values and uploa
 to the URL in `apkUrl` when you publish a release; clients reject anything whose checksum or
 signing certificate does not match.
 
-Release `v1.0.0` carries `droidos-1.0.0-release.apk`, so an update check now runs end to end:
+Release `v1.1.0` carries `droidos-1.1.0-release.apk`, so an update check runs end to end:
 manifest fetched, checksum compared, signing certificate matched against the installed app, and
 the system installer invoked. Download it from
-https://github.com/itriedcoding/DroidOS/releases/download/v1.0.0/droidos-1.0.0-release.apk
+https://github.com/itriedcoding/DroidOS/releases/download/v1.1.0/droidos-1.1.0-release.apk
 
 ---
 

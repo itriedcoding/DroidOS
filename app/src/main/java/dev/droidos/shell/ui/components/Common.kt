@@ -21,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,15 +29,48 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import dev.droidos.shell.ui.theme.DroidSurfaces
+
+/**
+ * Shape and spacing scale. Every surface in the shell picks from these instead of inventing
+ * its own radius, which is what keeps screens from drifting apart visually.
+ */
+object DroidRadius {
+    val sm: Dp = 12.dp
+    val md: Dp = 18.dp
+    val lg: Dp = 24.dp
+    val xl: Dp = 30.dp
+}
+
+object DroidSpacing {
+    val xs: Dp = 4.dp
+    val sm: Dp = 8.dp
+    val md: Dp = 12.dp
+    val lg: Dp = 16.dp
+    val xl: Dp = 24.dp
+}
+
+/** Theme-aware translucent fill used by every card, so light and dark both read correctly. */
+@Composable
+private fun cardFill(): Brush = Brush.verticalGradient(
+    listOf(
+        MaterialTheme.colorScheme.surface.copy(alpha = 0.78f),
+        MaterialTheme.colorScheme.surface.copy(alpha = 0.55f)
+    )
+)
+
+@Composable
+private fun hairline(): Color = MaterialTheme.colorScheme.outline.copy(alpha = 0.55f)
 
 @Composable
 fun GlassCard(
@@ -44,30 +78,41 @@ fun GlassCard(
     onClick: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
-    val shape = RoundedCornerShape(22.dp)
+    val shape = RoundedCornerShape(DroidRadius.lg)
     val base = Modifier
         .clip(shape)
-        .background(Color.White.copy(alpha = DroidSurfaces.cardAlpha))
-        .border(1.dp, Color.White.copy(alpha = DroidSurfaces.borderAlpha), shape)
+        .background(cardFill())
+        .border(1.dp, hairline(), shape)
     Surface(
         modifier = if (onClick != null) modifier.then(base).clickable { onClick() } else modifier.then(base),
         color = Color.Transparent,
         shape = shape
     ) {
-        Box(Modifier.padding(16.dp)) { content() }
+        Box(Modifier.padding(18.dp)) { content() }
     }
 }
 
 @Composable
 fun SectionLabel(text: String, modifier: Modifier = Modifier) {
-    Text(
-        text = text.uppercase(),
-        style = MaterialTheme.typography.labelSmall,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        letterSpacing = 1.4.sp,
-        fontWeight = FontWeight.SemiBold,
-        modifier = modifier.padding(horizontal = 4.dp, vertical = 8.dp)
-    )
+    Row(
+        modifier = modifier.padding(start = 4.dp, top = 10.dp, bottom = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            Modifier
+                .size(width = 3.dp, height = 12.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.primary)
+        )
+        Spacer(Modifier.width(8.dp))
+        Text(
+            text = text.uppercase(),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            letterSpacing = 1.6.sp,
+            fontWeight = FontWeight.SemiBold
+        )
+    }
 }
 
 @Composable
@@ -75,8 +120,9 @@ fun IconBadge(icon: ImageVector, tint: Color, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .size(38.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(tint.copy(alpha = 0.16f)),
+            .clip(RoundedCornerShape(DroidRadius.sm))
+            .background(tint.copy(alpha = 0.16f))
+            .border(1.dp, tint.copy(alpha = 0.22f), RoundedCornerShape(DroidRadius.sm)),
         contentAlignment = Alignment.Center
     ) {
         Icon(icon, contentDescription = null, tint = tint, modifier = Modifier.size(20.dp))
@@ -96,14 +142,15 @@ fun SettingRow(
         modifier = Modifier
             .fillMaxWidth()
             .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
-            .padding(vertical = 10.dp),
+            .padding(vertical = 11.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconBadge(icon, tint)
         Spacer(Modifier.width(14.dp))
         Column(Modifier.weight(1f)) {
-            Text(title, style = MaterialTheme.typography.bodyLarge)
+            Text(title, style = MaterialTheme.typography.bodyLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
             if (!subtitle.isNullOrBlank()) {
+                Spacer(Modifier.height(2.dp))
                 Text(
                     subtitle,
                     style = MaterialTheme.typography.bodySmall,
@@ -135,20 +182,40 @@ fun SwitchRow(
         subtitle = subtitle,
         tint = if (checked) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
         trailing = {
-            Switch(checked = checked, onCheckedChange = onCheckedChange, enabled = enabled)
+            Switch(
+                checked = checked,
+                onCheckedChange = onCheckedChange,
+                enabled = enabled,
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                    checkedTrackColor = MaterialTheme.colorScheme.primary
+                )
+            )
         },
         onClick = if (enabled) ({ onCheckedChange(!checked) }) else null
     )
 }
 
+/** Hairline separator for rows inside one card. */
 @Composable
-fun StatBar(fraction: Float, color: Color = MaterialTheme.colorScheme.primary, height: Int = 8) {
+fun RowDivider(modifier: Modifier = Modifier) {
+    Box(
+        modifier
+            .fillMaxWidth()
+            .padding(start = 52.dp)
+            .height(1.dp)
+            .background(hairline())
+    )
+}
+
+@Composable
+fun StatBar(fraction: Float, color: Color = MaterialTheme.colorScheme.primary, height: Int = 6) {
     Box(
         Modifier
             .fillMaxWidth()
             .height(height.dp)
             .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.09f))
+            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f))
     ) {
         Box(
             Modifier
@@ -174,7 +241,7 @@ fun RingStat(
             val stroke = strokeWidth.dp.toPx()
             val inset = stroke / 2f
             drawArc(
-                color = Color.White.copy(alpha = 0.10f),
+                color = Color.White.copy(alpha = 0.08f),
                 startAngle = 0f,
                 sweepAngle = 360f,
                 useCenter = false,
@@ -193,7 +260,7 @@ fun RingStat(
             )
         }
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(value, style = MaterialTheme.typography.headlineMedium)
+            Text(value, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.SemiBold)
             Text(
                 caption,
                 style = MaterialTheme.typography.labelSmall,
@@ -214,19 +281,19 @@ fun EmptyState(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 48.dp, horizontal = 24.dp),
+            .padding(vertical = 52.dp, horizontal = 28.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        IconBadge(icon, MaterialTheme.colorScheme.onSurfaceVariant, Modifier.size(56.dp))
+        IconBadge(icon, MaterialTheme.colorScheme.onSurfaceVariant, Modifier.size(54.dp))
         Spacer(Modifier.height(16.dp))
-        Text(title, style = MaterialTheme.typography.titleMedium)
+        Text(title, style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
         Spacer(Modifier.height(6.dp))
         Text(
             message,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            textAlign = TextAlign.Center
         )
         if (actionLabel != null && onAction != null) {
             Spacer(Modifier.height(18.dp))

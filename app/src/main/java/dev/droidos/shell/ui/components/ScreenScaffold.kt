@@ -17,7 +17,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,12 +26,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 /**
  * Standard screen chrome: status-bar inset, back affordance, title and an action slot.
- * Every in-process app uses it so navigation looks identical everywhere.
+ * Every in-process app uses it so navigation and headings look identical everywhere.
  */
 @Composable
 fun ScreenScaffold(
@@ -46,7 +48,7 @@ fun ScreenScaffold(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 10.dp),
+                .padding(horizontal = 20.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (onBack != null) {
@@ -54,27 +56,32 @@ fun ScreenScaffold(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.06f))
-                        .clickable { onBack() },
+                        .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.7f))
+                        .then(
+                            Modifier.clickable { onBack() }
+                        ),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        Icons.Rounded.ArrowBack,
+                        Icons.AutoMirrored.Rounded.ArrowBack,
                         contentDescription = "Back",
                         tint = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(19.dp)
                     )
                 }
-                Spacer(Modifier.width(12.dp))
+                Spacer(Modifier.width(14.dp))
             } else if (leadingIcon != null) {
                 IconBadge(leadingIcon, MaterialTheme.colorScheme.primary)
-                Spacer(Modifier.width(12.dp))
+                Spacer(Modifier.width(14.dp))
             }
 
             Column(Modifier.weight(1f)) {
                 Text(
                     title,
-                    style = MaterialTheme.typography.titleLarge,
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    letterSpacing = (-0.5).sp,
+                    color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -90,6 +97,13 @@ fun ScreenScaffold(
             }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp), content = actions)
         }
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+                .height(1.dp)
+                .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.35f))
+        )
         Spacer(Modifier.height(4.dp))
         Box(Modifier.fillMaxSize()) { content() }
     }

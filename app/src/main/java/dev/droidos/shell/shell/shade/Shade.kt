@@ -2,6 +2,7 @@ package dev.droidos.shell.shell.shade
 
 import android.media.AudioManager
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -64,6 +65,7 @@ import dev.droidos.shell.shell.controls.AudioControls
 import dev.droidos.shell.shell.controls.DisplayControls
 import dev.droidos.shell.shell.controls.TorchController
 import dev.droidos.shell.shell.controls.VolumeScale
+import dev.droidos.shell.ui.components.DroidRadius
 import dev.droidos.shell.ui.components.EmptyState
 import dev.droidos.shell.ui.components.MessageBanner
 import dev.droidos.shell.ui.components.SectionLabel
@@ -304,7 +306,7 @@ fun Shade(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clip(RoundedCornerShape(18.dp))
-                                    .background(Color.White.copy(alpha = 0.06f))
+                                    .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.62f))
                                     .padding(horizontal = 14.dp, vertical = 12.dp),
                                 verticalAlignment = Alignment.Top
                             ) {
@@ -402,10 +404,19 @@ private fun Tile(
     val tint = if (active) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
     Column(
         modifier = modifier
-            .clip(RoundedCornerShape(18.dp))
-            .background(if (active) tint.copy(alpha = 0.18f) else Color.White.copy(alpha = 0.05f))
+            .clip(RoundedCornerShape(DroidRadius.md))
+            .background(
+                if (active) tint.copy(alpha = 0.16f)
+                else MaterialTheme.colorScheme.surface.copy(alpha = 0.6f)
+            )
+            .border(
+                1.dp,
+                if (active) tint.copy(alpha = 0.3f)
+                else MaterialTheme.colorScheme.outline.copy(alpha = 0.4f),
+                RoundedCornerShape(DroidRadius.md)
+            )
             .clickable { onClick() }
-            .padding(horizontal = 10.dp, vertical = 12.dp),
+            .padding(horizontal = 10.dp, vertical = 14.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(icon, contentDescription = label, tint = tint, modifier = Modifier.size(22.dp))

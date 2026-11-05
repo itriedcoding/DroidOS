@@ -9,6 +9,7 @@ enum class Screen(val title: String) {
     HOME("DroidOS"),
     DRAWER("Apps"),
     RECENTS("Recents"),
+    SEARCH("Search"),
     SETTINGS("Settings"),
     APPEARANCE("Appearance"),
     NETWORK("Wi-Fi & Bluetooth"),
@@ -26,6 +27,7 @@ enum class Screen(val title: String) {
     VAULT("Vault"),
     SCANNER("Security scan"),
     CALCULATOR("Calculator"),
+    CLOCK("Clock"),
     FIREWALL("Firewall"),
     PRIVACY("Privacy")
 }
