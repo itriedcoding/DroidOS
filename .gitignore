@@ -1,0 +1,28 @@
+# Local toolchain (JDK, Gradle, Android SDK) installed by scripts/bootstrap-toolchain.sh
+.tools/
+local.properties
+
+# Gradle
+.gradle/
+build/
+*/build/
+captures/
+.externalNativeBuild/
+.cxx/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.DS_Store
+
+# Signing material (never commit)
+*.jks
+*.keystore
+keystore.properties
+
+# Logs / local artifacts
+*.log
+*.apk.idsig

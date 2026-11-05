@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DroidOS</string>
+    <string name="notification_listener_label">DroidOS Notifications</string>
+    <string name="firewall_session_name">DroidOS Firewall</string>
+    <string name="shortcut_vault_short">Vault</string>
+    <string name="shortcut_vault_long">Open encrypted vault</string>
+    <string name="shortcut_firewall_short">Firewall</string>
+    <string name="shortcut_firewall_long">Manage network firewall</string>
+</resources>

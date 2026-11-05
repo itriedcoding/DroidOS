@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_vault"
+        android:shortcutId="vault"
+        android:shortcutLongLabel="@string/shortcut_vault_long"
+        android:shortcutShortLabel="@string/shortcut_vault_short">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="droidos://vault"
+            android:targetClass="dev.droidos.shell.MainActivity"
+            android:targetPackage="dev.droidos.shell" />
+    </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_firewall"
+        android:shortcutId="firewall"
+        android:shortcutLongLabel="@string/shortcut_firewall_long"
+        android:shortcutShortLabel="@string/shortcut_firewall_short">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="droidos://firewall"
+            android:targetClass="dev.droidos.shell.MainActivity"
+            android:targetPackage="dev.droidos.shell" />
+    </shortcut>
+</shortcuts>
