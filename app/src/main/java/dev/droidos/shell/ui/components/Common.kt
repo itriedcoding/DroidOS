@@ -61,16 +61,18 @@ object DroidSpacing {
 }
 
 /** Theme-aware translucent fill used by every card, so light and dark both read correctly. */
+/** Near-black card with a hot-pink wash, so surfaces read as gradients rather than flat fills. */
 @Composable
 private fun cardFill(): Brush = Brush.verticalGradient(
     listOf(
-        MaterialTheme.colorScheme.surface.copy(alpha = 0.78f),
-        MaterialTheme.colorScheme.surface.copy(alpha = 0.55f)
+        MaterialTheme.colorScheme.surface.copy(alpha = 0.94f),
+        MaterialTheme.colorScheme.primary.copy(alpha = 0.08f),
+        MaterialTheme.colorScheme.surface.copy(alpha = 0.90f)
     )
 )
 
 @Composable
-private fun hairline(): Color = MaterialTheme.colorScheme.outline.copy(alpha = 0.55f)
+private fun hairline(): Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.16f)
 
 @Composable
 fun GlassCard(

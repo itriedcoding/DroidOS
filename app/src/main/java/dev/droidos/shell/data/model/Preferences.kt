@@ -2,6 +2,7 @@ package dev.droidos.shell.data.model
 
 /** Accent palettes bundled with the theme engine. */
 enum class AccentColor(val label: String) {
+    HOT_PINK("Hot pink"),
     AZURE("Azure"),
     VIOLET("Violet"),
     EMERALD("Emerald"),
@@ -11,7 +12,7 @@ enum class AccentColor(val label: String) {
 
     companion object {
         fun fromId(id: String?): AccentColor =
-            entries.firstOrNull { it.name == id } ?: AZURE
+            entries.firstOrNull { it.name == id } ?: HOT_PINK
     }
 }
 
@@ -39,7 +40,7 @@ enum class WallpaperStyle(val label: String) {
 
 /** Immutable snapshot of every user preference the shell persists. */
 data class AppSettings(
-    val accent: AccentColor = AccentColor.AZURE,
+    val accent: AccentColor = AccentColor.HOT_PINK,
     val themeMode: ThemeMode = ThemeMode.DARK,
     val amoledBlack: Boolean = true,
     val wallpaper: WallpaperStyle = WallpaperStyle.AURORA,

@@ -17,9 +17,15 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 /**
- * Secure update pipeline: fetch an HTTPS manifest, compare versions, download the APK,
- * verify its SHA-256 against the manifest AND that it is signed by the same certificate as
- * the running app, and only then hand it to the system installer.
+ * Update pipeline driven by the project's release page.
+ *
+ * Two sources are read and must agree before anything is offered:
+ *  - the GitHub releases API, which is what the release page shows (tag, notes, asset name/URL)
+ *  - `updates/channel.json`, which carries the version code and the SHA-256, because the API does
+ *    not publish a checksum
+ *
+ * The downloaded APK is then verified against that checksum and against the signing certificate of
+ * the installed app before the system installer is invoked.
  */
 class UpdateRepository(
     private val context: Context,
@@ -27,7 +33,7 @@ class UpdateRepository(
 ) {
 
     sealed interface CheckResult {
-        data class Available(val manifest: UpdateManifest) : CheckResult
+        data class Available(val manifest: UpdateManifest, val release: ReleaseInfo) : CheckResult
         data object UpToDate : CheckResult
         data class Failed(val reason: String) : CheckResult
     }
@@ -38,30 +44,40 @@ class UpdateRepository(
     }
 
     suspend fun check(): CheckResult = withContext(Dispatchers.IO) {
-        val channel = settingsRepository.current().updateChannelUrl
-            .ifBlank { BuildInfo.UPDATE_CHANNEL_URL }
-        val json = try {
-            httpGet(channel)
+        val release = try {
+            GitHubRelease.parse(httpGet(BuildInfo.RELEASES_API_URL, "application/vnd.github+json"))
         } catch (e: Exception) {
-            AppLog.e("Updates", "Manifest fetch failed for $channel", e)
-            return@withContext CheckResult.Failed(e.message ?: "Could not reach the update channel")
+            AppLog.e("Updates", "Release page fetch failed", e)
+            return@withContext CheckResult.Failed(
+                "Could not read the release page: ${e.message ?: "unknown error"}"
+            )
         }
 
+        val channel = settingsRepository.current().updateChannelUrl
+            .ifBlank { BuildInfo.UPDATE_CHANNEL_URL }
         val manifest = try {
-            UpdateManifest.parse(json)
+            UpdateManifest.parse(httpGet(channel, "application/json"))
         } catch (e: Exception) {
             AppLog.e("Updates", "Manifest rejected", e)
             return@withContext CheckResult.Failed("Update manifest is invalid: ${e.message}")
         }
 
+        // Never offer a build whose release page and manifest describe different things.
+        UpdateIntegrity.disagreement(manifest, release)?.let { reason ->
+            AppLog.e("Updates", "Release page and manifest disagree: $reason")
+            return@withContext CheckResult.Failed("Refusing this update: $reason")
+        }
+
         settingsRepository.setLastUpdateCheck(System.currentTimeMillis())
-        val newer = manifest.versionCode > BuildInfo.VERSION_CODE ||
-            Versions.compare(manifest.versionName, BuildInfo.VERSION_NAME) == VersionRelation.NEWER
         AppLog.i(
             "Updates",
-            "Channel offers ${manifest.versionName} (${manifest.versionCode}); installed ${BuildInfo.VERSION_NAME}"
+            "Release ${release.tag} offers ${manifest.versionName} (${manifest.versionCode}); " +
+                "installed ${BuildInfo.VERSION_NAME}"
         )
-        if (newer) CheckResult.Available(manifest) else CheckResult.UpToDate
+
+        val newer = manifest.versionCode > BuildInfo.VERSION_CODE ||
+            Versions.compare(manifest.versionName, BuildInfo.VERSION_NAME) == VersionRelation.NEWER
+        if (newer) CheckResult.Available(manifest, release) else CheckResult.UpToDate
     }
 
     suspend fun download(manifest: UpdateManifest): DownloadResult = withContext(Dispatchers.IO) {
@@ -72,6 +88,7 @@ class UpdateRepository(
                 connectTimeout = 20_000
                 readTimeout = 30_000
                 instanceFollowRedirects = true
+                setRequestProperty("User-Agent", userAgent())
             }
             connection.connect()
             if (connection.responseCode !in 200..299) {
@@ -139,22 +156,29 @@ class UpdateRepository(
         )
     }
 
-    private fun httpGet(url: String): String {
-        require(url.startsWith("https://")) { "Update channel must use HTTPS" }
+    private fun httpGet(url: String, accept: String): String {
+        require(url.startsWith("https://")) { "Update endpoints must use HTTPS" }
         val connection = (URL(url).openConnection() as HttpURLConnection).apply {
             connectTimeout = 15_000
             readTimeout = 15_000
             instanceFollowRedirects = true
-            setRequestProperty("Accept", "application/json")
+            setRequestProperty("Accept", accept)
+            setRequestProperty("User-Agent", userAgent())
         }
         try {
             connection.connect()
-            if (connection.responseCode !in 200..299) {
-                throw IllegalStateException("Update channel returned HTTP ${connection.responseCode}")
+            when (connection.responseCode) {
+                in 200..299 -> Unit
+                403, 429 -> throw IllegalStateException(
+                    "GitHub rate limit reached (HTTP ${connection.responseCode}); try again later"
+                )
+                else -> throw IllegalStateException("Update endpoint returned HTTP ${connection.responseCode}")
             }
             return connection.inputStream.bufferedReader().use { it.readText() }
         } finally {
             connection.disconnect()
         }
     }
+
+    private fun userAgent(): String = "DroidOS-Shell/${BuildInfo.VERSION_NAME}"
 }

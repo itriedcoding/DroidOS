@@ -36,7 +36,7 @@ the kind of fake feature this project avoids.
 | Notification shade | `NotificationListenerService` reading and dismissing live notifications |
 | Quick settings | Wi-Fi, Bluetooth, torch, DND, rotation lock, dark theme, brightness slider |
 | Recents | `UsageStatsManager` history with foreground time |
-| Theming | Six accent palettes, light/dark/system, AMOLED black, five wallpapers, grid sizing |
+| Theming | Seven accent palettes (hot pink by default), true-black gradients, white text, five wallpapers |
 | App lock | Chosen apps require biometrics before the launcher will open them |
 
 ### Built-in apps
@@ -338,7 +338,7 @@ $ANDROID_HOME/build-tools/35.0.0/apksigner verify --print-certs \
 ```
 
 The `sha256` committed in `updates/channel.json` is the checksum of the release build above - the
-same file attached to release `v1.3.0`. Recompute it (`sha256sum`, or `shasum -a 256`) if you
+same file attached to release `v1.4.0`. Recompute it (`sha256sum`, or `shasum -a 256`) if you
 upload a different artifact, otherwise installed clients will reject the update.
 
 ---
@@ -350,10 +350,10 @@ must contain a valid `sha256` of the published APK. Replace the values and uploa
 to the URL in `apkUrl` when you publish a release; clients reject anything whose checksum or
 signing certificate does not match.
 
-Release `v1.3.0` carries `droidos-1.3.0-release.apk`, so an update check runs end to end:
+Release `v1.4.0` carries `droidos-1.4.0-release.apk`, so an update check runs end to end:
 manifest fetched, checksum compared, signing certificate matched against the installed app, and
 the system installer invoked. Download it from
-https://github.com/itriedcoding/DroidOS/releases/download/v1.3.0/droidos-1.3.0-release.apk
+https://github.com/itriedcoding/DroidOS/releases/download/v1.4.0/droidos-1.4.0-release.apk
 
 ---
 

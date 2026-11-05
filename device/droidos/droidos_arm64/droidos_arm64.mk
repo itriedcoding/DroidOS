@@ -22,7 +22,7 @@ PRODUCT_PACKAGES += \
 
 # Product identity reported to the shell and to apps.
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.droidos.version=1.3.0 \
+    ro.droidos.version=1.4.0 \
     ro.droidos.build=platform
 
 # The update channel the shell reads; it still verifies the checksum and the signing certificate.

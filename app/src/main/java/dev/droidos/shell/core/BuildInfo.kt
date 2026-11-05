@@ -8,9 +8,16 @@ object BuildInfo {
     const val VERSION_NAME: String = BuildConfig.VERSION_NAME
     const val VERSION_CODE: Int = BuildConfig.VERSION_CODE
 
-    /** Update channel manifest published with the project. */
+    /** Update channel manifest published with the project (source of the checksum). */
     const val UPDATE_CHANNEL_URL: String =
         "https://raw.githubusercontent.com/itriedcoding/DroidOS/main/updates/channel.json"
+
+    /** Latest published release, read by Settings -> System update. */
+    const val RELEASES_API_URL: String =
+        "https://api.github.com/repos/itriedcoding/DroidOS/releases/latest"
+
+    /** Human-facing release list, opened from the update screen. */
+    const val RELEASES_PAGE_URL: String = "https://github.com/itriedcoding/DroidOS/releases"
 
     val DEVICE_SUMMARY: String
         get() = "${Build.MANUFACTURER} ${Build.MODEL} (${Build.DEVICE})"
