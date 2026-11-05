@@ -72,6 +72,18 @@ class DroidNotificationListener : NotificationListenerService() {
         if (title.isBlank() && text.isBlank()) return null
 
         val appLabel = ServiceLocator.apps.labelFor(packageName)
+
+        // Only actions the app declared with both a label and an intent can actually be run.
+        val actions = notification.actions
+            ?.mapNotNull { action ->
+                val label = action?.title?.toString()?.trim().orEmpty()
+                val intent = action?.actionIntent
+                if (label.isEmpty() || intent == null) null
+                else NotificationCenter.Action(label = label, pendingIntent = intent)
+            }
+            ?.take(3)
+            ?: emptyList()
+
         return NotificationCenter.Item(
             key = key,
             packageName = packageName,
@@ -80,7 +92,8 @@ class DroidNotificationListener : NotificationListenerService() {
             text = text,
             postedAt = postTime.takeIf { it > 0 } ?: System.currentTimeMillis(),
             ongoing = isOngoing,
-            clearable = isClearable
+            clearable = isClearable,
+            actions = actions
         )
     }
 }

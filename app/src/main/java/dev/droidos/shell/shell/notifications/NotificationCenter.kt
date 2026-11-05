@@ -1,5 +1,6 @@
 package dev.droidos.shell.shell.notifications
 
+import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -23,7 +24,14 @@ class NotificationCenter(private val context: Context) {
         val text: String,
         val postedAt: Long,
         val ongoing: Boolean,
-        val clearable: Boolean
+        val clearable: Boolean,
+        val actions: List<Action> = emptyList()
+    )
+
+    /** A button the posting app attached to its notification, executed through its own PendingIntent. */
+    data class Action(
+        val label: String,
+        val pendingIntent: PendingIntent
     )
 
     private val _items = MutableStateFlow<List<Item>>(emptyList())
@@ -49,6 +57,18 @@ class NotificationCenter(private val context: Context) {
 
     internal fun publish(items: List<Item>) {
         _items.value = items.sortedByDescending { it.postedAt }
+    }
+
+    /** Runs a notification's own action, so the posting app receives the tap it expects. */
+    fun fire(action: Action) {
+        try {
+            action.pendingIntent.send()
+            AppLog.i("NotificationCenter", "Ran notification action ${action.label}")
+        } catch (e: PendingIntent.CanceledException) {
+            AppLog.w("NotificationCenter", "Action ${action.label} was cancelled by its app", e)
+        } catch (e: Exception) {
+            AppLog.e("NotificationCenter", "Could not run action ${action.label}", e)
+        }
     }
 
     fun dismiss(key: String) {

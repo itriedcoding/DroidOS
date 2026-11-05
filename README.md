@@ -48,6 +48,15 @@ the kind of fake feature this project avoids.
 * **Privacy** — live camera/microphone indicators, system-wide mic mute, permission holders
 * **Calculator** — recursive-descent expression evaluator with live preview
 
+### Quick settings and notifications
+* Volume mixer for the media, ring and alarm streams, driven by `AudioManager`, with per-stream mute
+* Brightness, rotation lock, screen timeout, torch, Wi-Fi, Bluetooth, Do Not Disturb and theme tiles
+* Live notification list with each app's own action buttons, run through its `PendingIntent`
+
+### App drawer
+* Search across built-in apps and installed packages
+* Long-press any app for its info page, uninstall, or to place it behind the lock
+
 ### Settings
 Appearance, Wi-Fi & Bluetooth, Battery, Storage, Accessibility, Installed apps,
 Permission audit, Security centre, System update, Diagnostics, About.
@@ -197,7 +206,7 @@ against a rooted device, a malicious OS build, or an attacker with the device un
 
 Unit tests cover the pure logic: expression parsing and precedence, vault container round-trip
 and tamper rejection, PIN hashing and lockout policy, risk-rule behaviour and thresholds,
-firewall allow-list maths, version comparison and formatting.
+firewall allow-list maths, volume step mapping, version comparison and formatting.
 
 Instrumented tests (`app/src/androidTest`) require a device or emulator:
 
@@ -225,9 +234,9 @@ $ANDROID_HOME/build-tools/35.0.0/apksigner verify --print-certs \
   app/build/outputs/apk/release/app-release.apk
 ```
 
-The `sha256` committed in `updates/channel.json` is the checksum of the debug build above.
-Recompute it (`sha256sum`, or `shasum -a 256`) if you publish a different artifact, otherwise
-installed clients will reject the update.
+The `sha256` committed in `updates/channel.json` is the checksum of the release build above - the
+same file attached to release `v1.0.0`. Recompute it (`sha256sum`, or `shasum -a 256`) if you
+upload a different artifact, otherwise installed clients will reject the update.
 
 ---
 
@@ -238,8 +247,10 @@ must contain a valid `sha256` of the published APK. Replace the values and uploa
 to the URL in `apkUrl` when you publish a release; clients reject anything whose checksum or
 signing certificate does not match.
 
-Until that release asset exists, an update check fails at the download step and the Updates screen
-reports the HTTP error. That is the honest result of an empty channel, not a simulated update.
+Release `v1.0.0` carries `droidos-1.0.0-release.apk`, so an update check now runs end to end:
+manifest fetched, checksum compared, signing certificate matched against the installed app, and
+the system installer invoked. Download it from
+https://github.com/itriedcoding/DroidOS/releases/download/v1.0.0/droidos-1.0.0-release.apk
 
 ---
 

@@ -1,5 +1,6 @@
 package dev.droidos.shell.shell.shade
 
+import android.media.AudioManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +31,8 @@ import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.NotificationsOff
 import androidx.compose.material.icons.rounded.ScreenRotation
 import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.VolumeOff
+import androidx.compose.material.icons.rounded.VolumeUp
 import androidx.compose.material.icons.rounded.Wifi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -57,8 +60,10 @@ import dev.droidos.shell.core.Fmt
 import dev.droidos.shell.core.ServiceLocator
 import dev.droidos.shell.data.model.ThemeMode
 import dev.droidos.shell.shell.Screen
+import dev.droidos.shell.shell.controls.AudioControls
 import dev.droidos.shell.shell.controls.DisplayControls
 import dev.droidos.shell.shell.controls.TorchController
+import dev.droidos.shell.shell.controls.VolumeScale
 import dev.droidos.shell.ui.components.EmptyState
 import dev.droidos.shell.ui.components.MessageBanner
 import dev.droidos.shell.ui.components.SectionLabel
@@ -87,6 +92,11 @@ fun Shade(
     var rotationLocked by remember { mutableStateOf(!display.isAutoRotateEnabled()) }
     val torchOn by torch.isOn.collectAsStateWithLifecycle()
     var brightness by remember { mutableFloatStateOf(display.brightness() / 255f) }
+    val audio = remember { AudioControls(context) }
+    var volumeStream by remember { mutableStateOf(AudioManager.STREAM_MUSIC) }
+    var volumeFraction by remember { mutableFloatStateOf(0f) }
+    var muted by remember { mutableStateOf(false) }
+    var screenTimeout by remember { mutableStateOf(display.screenTimeoutMillis()) }
     var message by remember { mutableStateOf<String?>(null) }
     val settings by ServiceLocator.settings.settings.collectAsStateWithLifecycle(
         initialValue = dev.droidos.shell.data.model.AppSettings()
@@ -106,6 +116,20 @@ fun Shade(
             rotationLocked = !display.isAutoRotateEnabled()
             brightness = display.brightness() / 255f
             delay(2000)
+        }
+    }
+
+    // The volume mixer is polled separately so switching stream re-reads that stream immediately.
+    LaunchedEffect(volumeStream) {
+        while (true) {
+            if (audio.isAvailable()) {
+                volumeFraction = VolumeScale.percent(
+                    audio.currentVolume(volumeStream),
+                    audio.maxVolume(volumeStream)
+                )
+                muted = audio.isMuted(volumeStream)
+            }
+            delay(1500)
         }
     }
 
@@ -188,6 +212,64 @@ fun Shade(
                 )
             }
 
+            Spacer(Modifier.height(10.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text("Volume", style = MaterialTheme.typography.bodySmall, modifier = Modifier.width(78.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Chip("Media", volumeStream == AudioManager.STREAM_MUSIC) {
+                        volumeStream = AudioManager.STREAM_MUSIC
+                    }
+                    Chip("Ring", volumeStream == AudioManager.STREAM_RING) {
+                        volumeStream = AudioManager.STREAM_RING
+                    }
+                    Chip("Alarm", volumeStream == AudioManager.STREAM_ALARM) {
+                        volumeStream = AudioManager.STREAM_ALARM
+                    }
+                }
+            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .size(34.dp)
+                        .clip(CircleShape)
+                        .background(
+                            if (muted) MaterialTheme.colorScheme.primary.copy(alpha = 0.18f)
+                            else Color.White.copy(alpha = 0.08f)
+                        )
+                        .clickable {
+                            report(audio.setMuted(volumeStream, !muted))
+                            muted = audio.isMuted(volumeStream)
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        if (muted) Icons.Rounded.VolumeOff else Icons.Rounded.VolumeUp,
+                        contentDescription = if (muted) "Unmute" else "Mute",
+                        tint = if (muted) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+                Spacer(Modifier.width(6.dp))
+                Slider(
+                    value = volumeFraction,
+                    onValueChange = { volumeFraction = it },
+                    onValueChangeFinished = { report(audio.setVolume(volumeStream, volumeFraction)) },
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text("Timeout", style = MaterialTheme.typography.bodySmall, modifier = Modifier.width(78.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    ScreenTimeouts.forEach { (label, millis) ->
+                        Chip(label, screenTimeout == millis) {
+                            report(display.setScreenTimeoutMillis(millis))
+                            screenTimeout = display.screenTimeoutMillis()
+                        }
+                    }
+                }
+            }
+
             Spacer(Modifier.height(6.dp))
             SectionLabel("Notifications")
 
@@ -258,6 +340,28 @@ fun Shade(
                                             maxLines = 3,
                                             overflow = TextOverflow.Ellipsis
                                         )
+                                    }
+                                    if (item.actions.isNotEmpty()) {
+                                        Spacer(Modifier.height(8.dp))
+                                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                            item.actions.forEach { action ->
+                                                Box(
+                                                    modifier = Modifier
+                                                        .clip(RoundedCornerShape(10.dp))
+                                                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.16f))
+                                                        .clickable { notifications.fire(action) }
+                                                        .padding(horizontal = 12.dp, vertical = 6.dp)
+                                                ) {
+                                                    Text(
+                                                        action.label,
+                                                        style = MaterialTheme.typography.labelSmall,
+                                                        color = MaterialTheme.colorScheme.primary,
+                                                        maxLines = 1,
+                                                        overflow = TextOverflow.Ellipsis
+                                                    )
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                                 if (item.clearable) {
@@ -349,5 +453,27 @@ private fun FooterButton(
         Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(16.dp))
         Spacer(Modifier.width(6.dp))
         Text(label, style = MaterialTheme.typography.labelMedium)
+    }
+}
+
+/** Screen-off delays the platform accepts without special-casing. */
+private val ScreenTimeouts = listOf(
+    "15s" to 15_000L,
+    "30s" to 30_000L,
+    "1m" to 60_000L,
+    "5m" to 300_000L
+)
+
+@Composable
+private fun Chip(label: String, selected: Boolean, onClick: () -> Unit) {
+    val tint = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(10.dp))
+            .background(if (selected) tint.copy(alpha = 0.20f) else Color.White.copy(alpha = 0.05f))
+            .clickable { onClick() }
+            .padding(horizontal = 10.dp, vertical = 6.dp)
+    ) {
+        Text(label, style = MaterialTheme.typography.labelSmall, color = tint)
     }
 }

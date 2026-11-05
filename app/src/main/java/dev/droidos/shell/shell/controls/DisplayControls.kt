@@ -79,4 +79,35 @@ class DisplayControls(private val context: Context) {
             ControlResult(false, e.message ?: "Brightness could not be changed")
         }
     }
+
+    // ----------------------------------------------------------- screen timeout
+    fun screenTimeoutMillis(): Long = try {
+        Settings.System.getInt(
+            context.contentResolver,
+            Settings.System.SCREEN_OFF_TIMEOUT,
+            30_000
+        ).toLong()
+    } catch (e: Exception) {
+        AppLog.w("DisplayControls", "Could not read screen timeout", e)
+        30_000L
+    }
+
+    fun setScreenTimeoutMillis(millis: Long): ControlResult {
+        if (!canWrite()) {
+            return ControlResult(false, "Grant modify-system-settings access to change the screen timeout", writeAccessIntent())
+        }
+        val clamped = millis.coerceIn(15_000L, 1_800_000L)
+        return try {
+            val applied = Settings.System.putInt(
+                context.contentResolver,
+                Settings.System.SCREEN_OFF_TIMEOUT,
+                clamped.toInt()
+            )
+            if (applied) ControlResult(true)
+            else ControlResult(false, "The system rejected the timeout change")
+        } catch (e: Exception) {
+            AppLog.e("DisplayControls", "Could not change screen timeout", e)
+            ControlResult(false, e.message ?: "Screen timeout could not be changed")
+        }
+    }
 }
