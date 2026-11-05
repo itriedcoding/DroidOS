@@ -29,3 +29,7 @@ keystore.properties
 
 # Staged shell APK for the device image (scripts/stage-prebuilt.sh)
 device/droidos/droidos_arm64/prebuilt/*.apk
+
+# Python bytecode
+__pycache__/
+*.pyc
