@@ -198,25 +198,31 @@ rather than in an APK, written in the languages a platform actually uses:
 | C11 | `platform/native/droidctl.c` | Kernel diagnostics helper reading `/proc/uptime`, `/proc/meminfo` and `/sys/fs/selinux/enforce`; a value the kernel does not expose is reported as unavailable, never invented |
 | C11 | `platform/native/netfilter_rules.c` | Renders the nftables/iptables rule that drops egress for one application UID |
 | AIDL | `platform/aidl/dev/droidos/platform/` | `IDroidPlatformService`: API version, build fingerprint, firewall state, UID blocklist, privacy callbacks |
+| C++20 | `platform/native/blocklist_store.cpp` | Sorted, duplicate-free UID blocklist that applies the same UID range rule as the database and the rule renderer |
+| Java | `platform/java/dev/droidos/platform/PlatformService.java` | `IDroidPlatformService.Stub` implementation: blocklist state, `RemoteCallbackList` privacy fan-out, compiled against `android.jar` |
+| ARM64 assembly | `platform/native/barriers_arm64.S` | `dsb`/`dmb`/`isb` helpers for the key-handling and cache-maintenance paths |
 | Rust | `platform/rust/droidpolicy` | Dependency-free capability risk scoring with unit tests |
 | SELinux | `platform/selinux/droidos.te` | Unprivileged domain for the helper: explicit allows, `neverallow` guards, no permissive mode |
 | Blueprint | `platform/Android.bp` | Soong modules for every module above |
 | SQL | `platform/sql/schema.sql` | Blocklist, privacy-event and update-history tables with CHECK constraints and indexes |
-| Python, Bash | `scripts/build-platform.py`, `scripts/build.sh` | Build drivers that run the real compilers and return their exit status |
+| Python, Bash, Make | `scripts/build-platform.py`, `scripts/build.sh`, `platform/Makefile` | Build drivers that run the real compilers and return their exit status |
 
 ```bash
 python scripts/build-platform.py          # compile and test everything this host supports
 python scripts/build-platform.py --strict # fail if a toolchain is missing
 ```
 
-The driver compiles the AIDL interfaces with the SDK `aidl` tool, builds the C with
-`-Wall -Wextra -Werror`, runs `droidctl --selftest` plus the 16 netfilter rule checks, applies the
-SQL schema twice to an in-memory database and asserts every constraint, index and the
-idempotency, and runs `cargo test` when Rust is present.
+The driver compiles the AIDL interfaces with the SDK `aidl` tool, builds the C and C++ with
+`-Wall -Wextra -Werror`, runs `droidctl --selftest`, the 16 netfilter rule checks and the 25
+blocklist checks, compiles the Java service against `android.jar` with `-Xlint:all -Werror`,
+applies the SQL schema twice to an in-memory database and asserts every constraint, index and the
+idempotency, assembles the ARM64 sources when an AArch64 assembler exists, and runs `cargo test`
+when Rust is present.
 
-What this machine could not compile is reported honestly rather than claimed: the Rust crate (no
-cargo), the SELinux policy (needs `checkpolicy`/`secilc`) and `Android.bp` (needs Soong) are
-reported as `SKIPPED`. There is no kernel or bootable image in this repository, and AOSP is not
+What this machine could not compile is reported honestly rather than claimed: the AArch64
+assembly (no ARM64 assembler), the Rust crate (no cargo), the SELinux policy (needs
+`checkpolicy`/`secilc`), `Android.bp` (needs Soong) and the Makefile (no make) are reported as
+`SKIPPED` or noted as unrun. There is no kernel or bootable image in this repository, and AOSP is not
 vendored here; [platform/README.md](platform/README.md) has the full verification matrix.
 
 ---

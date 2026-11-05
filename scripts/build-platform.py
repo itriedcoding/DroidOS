@@ -146,6 +146,89 @@ def build_rust():
     return run([cargo, "test", "--quiet"], cwd=manifest_dir)
 
 
+def build_cxx():
+    compiler = which(["g++", "clang++"])
+    if not compiler:
+        note_skip("C++", "no C++ compiler on PATH")
+        return 0
+
+    os.makedirs(OUT, exist_ok=True)
+    tests = os.path.join(OUT, "blocklist_test" + EXE)
+    code = run([
+        compiler, "-std=c++20", "-Wall", "-Wextra", "-Werror", "-O2", "-I", NATIVE, "-o", tests,
+        os.path.join(NATIVE, "blocklist_store.cpp"),
+        os.path.join(NATIVE, "blocklist_store_test.cpp"),
+    ])
+    if code != 0:
+        print("C++: FAILED to compile the blocklist tests")
+        return code
+    return run([tests])
+
+
+def find_android_jar():
+    android_home = os.environ.get("ANDROID_HOME") or os.environ.get("ANDROID_SDK_ROOT") or ""
+    if not android_home:
+        return None
+    jars = sorted(glob.glob(os.path.join(android_home, "platforms", "*", "android.jar")))
+    return jars[-1] if jars else None
+
+
+def build_java():
+    javac = which(["javac"])
+    if not javac:
+        java_home = os.environ.get("JAVA_HOME") or ""
+        candidate = os.path.join(java_home, "bin", "javac" + EXE)
+        javac = candidate if os.path.isfile(candidate) else None
+    if not javac:
+        note_skip("JAVA", "javac not found; set JAVA_HOME")
+        return 0
+
+    android_jar = find_android_jar()
+    if not android_jar:
+        note_skip("JAVA", "android.jar not found; set ANDROID_HOME")
+        return 0
+
+    generated = sorted(glob.glob(os.path.join(OUT, "aidl", "**", "*.java"), recursive=True))
+    if not generated:
+        note_skip("JAVA", "the AIDL stubs are unavailable")
+        return 0
+
+    sources = generated + sorted(
+        glob.glob(os.path.join(PLATFORM, "java", "**", "*.java"), recursive=True)
+    )
+    classes = os.path.join(OUT, "java")
+    os.makedirs(classes, exist_ok=True)
+
+    code = run([javac, "-Xlint:all", "-Werror", "-cp", android_jar, "-d", classes] + sources)
+    if code != 0:
+        print("JAVA: FAILED to compile the platform service against android.jar")
+        return code
+    print("JAVA: %d source file(s) compiled against %s" % (len(sources), android_jar))
+    return 0
+
+
+def assemble_asm():
+    sources = sorted(glob.glob(os.path.join(NATIVE, "*.S")))
+    if not sources:
+        return 0
+
+    assembler = which(["aarch64-linux-gnu-gcc", "aarch64-linux-android-clang", "clang"])
+    if not assembler:
+        note_skip("ASM", "no AArch64 assembler on PATH")
+        return 0
+
+    os.makedirs(OUT, exist_ok=True)
+    for source in sources:
+        code = run([
+            assembler, "-c", "-o", os.path.join(OUT, os.path.basename(source) + ".o"), source
+        ])
+        if code != 0:
+            print("ASM: FAILED to assemble %s" % os.path.basename(source))
+            return code
+    print("ASM: %d AArch64 source file(s) assembled" % len(sources))
+    return 0
+
+
 def check_sql():
     schema = os.path.join(PLATFORM, "sql", "schema.sql")
     if not os.path.isfile(schema):
@@ -245,7 +328,7 @@ def main(argv):
     print("sources: %s" % os.path.relpath(PLATFORM, ROOT))
     print("output:  %s" % os.path.relpath(OUT, ROOT))
 
-    for step in (build_aidl, build_c, check_sql, build_rust):
+    for step in (build_aidl, build_c, build_cxx, build_java, check_sql, assemble_asm, build_rust):
         code = step()
         if code != 0:
             print("platform layer: FAILED (%s)" % step.__name__)
