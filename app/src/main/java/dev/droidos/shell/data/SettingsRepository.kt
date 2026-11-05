@@ -48,6 +48,7 @@ class SettingsRepository(private val context: Context) {
         val lastUpdateCheck = longPreferencesKey("last_update_check")
         val updateChannel = stringPreferencesKey("update_channel_url")
         val showSeconds = booleanPreferencesKey("show_seconds")
+        val autoUpdate = booleanPreferencesKey("auto_update_check")
     }
 
     val settings: Flow<AppSettings> = context.settingsDataStore.data
@@ -79,7 +80,8 @@ class SettingsRepository(private val context: Context) {
         onboardingNotificationAsked = this[Keys.notificationAsked] ?: false,
         lastUpdateCheck = this[Keys.lastUpdateCheck] ?: 0L,
         updateChannelUrl = this[Keys.updateChannel] ?: "",
-        showSecondsInClock = this[Keys.showSeconds] ?: false
+        showSecondsInClock = this[Keys.showSeconds] ?: false,
+        autoUpdateCheck = this[Keys.autoUpdate] ?: true
     )
 
     private suspend fun update(block: (androidx.datastore.preferences.core.MutablePreferences) -> Unit) {
@@ -96,6 +98,7 @@ class SettingsRepository(private val context: Context) {
     suspend fun setWallpaper(style: WallpaperStyle) = update { it[Keys.wallpaper] = style.name }
     suspend fun setGridColumns(columns: Int) = update { it[Keys.gridColumns] = columns.coerceIn(0, 7) }
     suspend fun setShowSeconds(enabled: Boolean) = update { it[Keys.showSeconds] = enabled }
+    suspend fun setAutoUpdateCheck(enabled: Boolean) = update { it[Keys.autoUpdate] = enabled }
 
     suspend fun setLock(pinSalt: String?, pinHash: String?) = update {
         if (pinSalt == null || pinHash == null) {

@@ -58,5 +58,6 @@ data class AppSettings(
     val onboardingNotificationAsked: Boolean = false,
     val lastUpdateCheck: Long = 0L,
     val updateChannelUrl: String = "",
-    val showSecondsInClock: Boolean = false
+    val showSecondsInClock: Boolean = false,
+    val autoUpdateCheck: Boolean = true
 )

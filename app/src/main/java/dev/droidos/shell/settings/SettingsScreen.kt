@@ -14,14 +14,18 @@ import androidx.compose.material.icons.rounded.Android
 import androidx.compose.material.icons.rounded.BatteryFull
 import androidx.compose.material.icons.rounded.Bluetooth
 import androidx.compose.material.icons.rounded.BugReport
+import androidx.compose.material.icons.rounded.DisplaySettings
 import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.Palette
+import androidx.compose.material.icons.rounded.Schedule
 import androidx.compose.material.icons.rounded.Security
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Storage
 import androidx.compose.material.icons.rounded.SystemUpdate
 import androidx.compose.material.icons.rounded.VerifiedUser
+import androidx.compose.material.icons.rounded.VolumeUp
 import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -43,7 +47,7 @@ fun SettingsScreen(
 ) {
     ScreenScaffold(
         title = "Settings",
-        subtitle = "DroidOS shell configuration",
+        subtitle = "Shell and device settings",
         onBack = onBack
     ) {
         LazyColumn(
@@ -88,6 +92,34 @@ fun SettingsScreen(
                             title = "Storage",
                             subtitle = "Internal capacity and usage",
                             onClick = { onOpenScreen(Screen.STORAGE) },
+                            trailing = { Chevron() }
+                        )
+                        SettingRow(
+                            icon = Icons.Rounded.DisplaySettings,
+                            title = "Display",
+                            subtitle = "Brightness, screen timeout, rotation, theme",
+                            onClick = { onOpenScreen(Screen.DISPLAY) },
+                            trailing = { Chevron() }
+                        )
+                        SettingRow(
+                            icon = Icons.Rounded.VolumeUp,
+                            title = "Sound & vibration",
+                            subtitle = "Stream volumes, tones, Do Not Disturb",
+                            onClick = { onOpenScreen(Screen.SOUND) },
+                            trailing = { Chevron() }
+                        )
+                        SettingRow(
+                            icon = Icons.Rounded.LocationOn,
+                            title = "Location",
+                            subtitle = "Access state and apps that can request it",
+                            onClick = { onOpenScreen(Screen.LOCATION) },
+                            trailing = { Chevron() }
+                        )
+                        SettingRow(
+                            icon = Icons.Rounded.Schedule,
+                            title = "Date & time",
+                            subtitle = "Clock format, time source, time zone",
+                            onClick = { onOpenScreen(Screen.DATETIME) },
                             trailing = { Chevron() }
                         )
                         SettingRow(

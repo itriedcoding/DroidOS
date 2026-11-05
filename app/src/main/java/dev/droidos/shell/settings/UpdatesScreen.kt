@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Autorenew
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.SystemUpdate
@@ -25,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,6 +42,7 @@ import dev.droidos.shell.ui.components.GlassCard
 import dev.droidos.shell.ui.components.MessageBanner
 import dev.droidos.shell.ui.components.ScreenScaffold
 import dev.droidos.shell.ui.components.SectionLabel
+import dev.droidos.shell.ui.components.SwitchRow
 import dev.droidos.shell.updates.UpdateManifest
 import dev.droidos.shell.updates.UpdateRepository
 import kotlinx.coroutines.launch
@@ -54,6 +57,13 @@ fun UpdatesScreen(onBack: () -> Unit) {
     var status by remember { mutableStateOf<String?>(null) }
     var error by remember { mutableStateOf<String?>(null) }
     var lastCheck by remember { mutableStateOf(0L) }
+    var autoCheck by remember { mutableStateOf(true) }
+    val settingsRepository = ServiceLocator.settings
+
+    LaunchedEffect(Unit) {
+        autoCheck = settingsRepository.current().autoUpdateCheck
+        lastCheck = settingsRepository.current().lastUpdateCheck
+    }
 
     fun runCheck() {
         scope.launch {
@@ -150,6 +160,23 @@ fun UpdatesScreen(onBack: () -> Unit) {
                             )
                         }
                     }
+                }
+            }
+
+            item { SectionLabel("Automation") }
+            item {
+                GlassCard {
+                    SwitchRow(
+                        icon = Icons.Rounded.Autorenew,
+                        title = "Check for updates automatically",
+                        subtitle = "At most once a day when the shell starts. A found update raises a " +
+                            "notification; installing it always needs your confirmation in the system dialog.",
+                        checked = autoCheck,
+                        onCheckedChange = { enabled ->
+                            autoCheck = enabled
+                            scope.launch { settingsRepository.setAutoUpdateCheck(enabled) }
+                        }
+                    )
                 }
             }
 

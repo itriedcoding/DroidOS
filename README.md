@@ -65,8 +65,9 @@ the kind of fake feature this project avoids.
 * Sources that are unavailable are named in the result list, never filled with invented entries
 
 ### Settings
-Appearance, Wi-Fi & Bluetooth, Battery, Storage, Accessibility, Installed apps,
-Permission audit, Security centre, System update, Diagnostics, About.
+Appearance, Display, Sound & vibration, Location, Date & time, Wi-Fi & Bluetooth, Battery,
+Storage, Accessibility, Installed apps, Permission audit, Security centre, System update,
+Diagnostics, About.
 
 ### Security & privacy
 * AES-256-GCM chunked container, key generated inside the Android Keystore
@@ -77,6 +78,7 @@ Permission audit, Security centre, System update, Diagnostics, About.
 * Permission audit sourced from `PackageManager.checkPermission`
 * Heuristic malware engine: install source, permissions, control surfaces, debuggable flag
 * Signed update channel: HTTPS manifest, SHA-256 verification, same-signer check
+* Optional daily automatic update check that raises a notification, never a silent install
 * Structured logging with rotation, crash reports, and a diagnostics viewer
 
 ---
@@ -243,7 +245,7 @@ $ANDROID_HOME/build-tools/35.0.0/apksigner verify --print-certs \
 ```
 
 The `sha256` committed in `updates/channel.json` is the checksum of the release build above - the
-same file attached to release `v1.1.0`. Recompute it (`sha256sum`, or `shasum -a 256`) if you
+same file attached to release `v1.2.0`. Recompute it (`sha256sum`, or `shasum -a 256`) if you
 upload a different artifact, otherwise installed clients will reject the update.
 
 ---
@@ -255,10 +257,17 @@ must contain a valid `sha256` of the published APK. Replace the values and uploa
 to the URL in `apkUrl` when you publish a release; clients reject anything whose checksum or
 signing certificate does not match.
 
-Release `v1.1.0` carries `droidos-1.1.0-release.apk`, so an update check runs end to end:
+Release `v1.2.0` carries `droidos-1.2.0-release.apk`, so an update check runs end to end:
 manifest fetched, checksum compared, signing certificate matched against the installed app, and
 the system installer invoked. Download it from
-https://github.com/itriedcoding/DroidOS/releases/download/v1.1.0/droidos-1.1.0-release.apk
+https://github.com/itriedcoding/DroidOS/releases/download/v1.2.0/droidos-1.2.0-release.apk
+
+---
+
+## License
+
+MIT, see [LICENSE.md](LICENSE.md). DroidOS is a third-party launcher that runs on Android; this
+repository does not include or redistribute the Android platform or Google's applications.
 
 ---
 

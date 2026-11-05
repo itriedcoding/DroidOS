@@ -38,11 +38,15 @@ import dev.droidos.shell.settings.AccessibilityScreen
 import dev.droidos.shell.settings.AppearanceScreen
 import dev.droidos.shell.settings.AppsScreen
 import dev.droidos.shell.settings.BatteryScreen
+import dev.droidos.shell.settings.DateTimeSettingsScreen
 import dev.droidos.shell.settings.DiagnosticsScreen
+import dev.droidos.shell.settings.DisplaySettingsScreen
+import dev.droidos.shell.settings.LocationSettingsScreen
 import dev.droidos.shell.settings.NetworkScreen
 import dev.droidos.shell.settings.PermissionsScreen
 import dev.droidos.shell.settings.SecurityScreen
 import dev.droidos.shell.settings.SettingsScreen
+import dev.droidos.shell.settings.SoundSettingsScreen
 import dev.droidos.shell.settings.StorageScreen
 import dev.droidos.shell.settings.UpdatesScreen
 import dev.droidos.shell.shell.drawer.AppDrawer
@@ -178,6 +182,10 @@ private fun ShellContent(
 
         Screen.SETTINGS -> SettingsScreen(onBack = back, onOpenScreen = open, viewModel = viewModel)
         Screen.APPEARANCE -> AppearanceScreen(onBack = back, viewModel = viewModel)
+        Screen.DISPLAY -> DisplaySettingsScreen(onBack = back, viewModel = viewModel)
+        Screen.SOUND -> SoundSettingsScreen(onBack = back)
+        Screen.LOCATION -> LocationSettingsScreen(onBack = back)
+        Screen.DATETIME -> DateTimeSettingsScreen(onBack = back)
         Screen.NETWORK -> NetworkScreen(onBack = back)
         Screen.BATTERY -> BatteryScreen(onBack = back)
         Screen.STORAGE -> StorageScreen(onBack = back)
