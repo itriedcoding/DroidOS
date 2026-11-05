@@ -207,12 +207,39 @@ Instrumented tests (`app/src/androidTest`) require a device or emulator:
 
 ---
 
+## Release artifacts
+
+`./scripts/build.sh debug` and `./scripts/build.sh release` produce two APKs. Both are signed by
+the development keystore, so the update channel's signer check accepts either of them:
+
+| Build | Path | Size | Notes |
+| --- | --- | --- | --- |
+| debug | `app/build/outputs/apk/debug/app-debug.apk` | ~62 MB | Debuggable, keeps the full icon set |
+| release | `app/build/outputs/apk/release/app-release.apk` | ~3.5 MB | R8-minified, unused resources removed |
+
+Both carry the certificate `CN=DroidOS, OU=Shell, O=DroidOS`
+(SHA-256 `a99eb98a508143479132f116ac13c097fb118a0061e8e65d9ce610bf8c0a9d04`). Confirm it with:
+
+```bash
+$ANDROID_HOME/build-tools/35.0.0/apksigner verify --print-certs \
+  app/build/outputs/apk/release/app-release.apk
+```
+
+The `sha256` committed in `updates/channel.json` is the checksum of the debug build above.
+Recompute it (`sha256sum`, or `shasum -a 256`) if you publish a different artifact, otherwise
+installed clients will reject the update.
+
+---
+
 ## Update channel
 
 `updates/channel.json` is the manifest served to installed clients. It is fetched over HTTPS and
 must contain a valid `sha256` of the published APK. Replace the values and upload the matching APK
 to the URL in `apkUrl` when you publish a release; clients reject anything whose checksum or
 signing certificate does not match.
+
+Until that release asset exists, an update check fails at the download step and the Updates screen
+reports the HTTP error. That is the honest result of an empty channel, not a simulated update.
 
 ---
 
