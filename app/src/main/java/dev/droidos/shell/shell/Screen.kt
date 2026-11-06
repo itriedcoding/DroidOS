@@ -41,7 +41,14 @@ enum class Screen(val title: String) {
     TEXT_TOOLS("Text tools"),
     COMPASS("Compass"),
     NETCHECK("Netcheck"),
-    LEDGER("Ledger")
+    LEDGER("Ledger"),
+    CLEANER("Cleaner"),
+    TORCH("Torch"),
+    LEVEL("Level"),
+    TIMELAB("Time lab"),
+    CIPHER("Cipher"),
+    SPEEDTEST("Speed test"),
+    GENERATOR("Generator")
 }
 
 /** Simple, predictable back stack. Home is always at the bottom. */

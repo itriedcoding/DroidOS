@@ -6,14 +6,19 @@ import androidx.compose.material.icons.rounded.AccountBalanceWallet
 import androidx.compose.material.icons.rounded.Alarm
 import androidx.compose.material.icons.rounded.BugReport
 import androidx.compose.material.icons.rounded.Calculate
+import androidx.compose.material.icons.rounded.Casino
+import androidx.compose.material.icons.rounded.CleaningServices
 import androidx.compose.material.icons.rounded.Explore
 import androidx.compose.material.icons.rounded.Fingerprint
+import androidx.compose.material.icons.rounded.FlashlightOn
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.NetworkCheck
+import androidx.compose.material.icons.rounded.Public
 import androidx.compose.material.icons.rounded.Sensors
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Shield
+import androidx.compose.material.icons.rounded.Speed
 import androidx.compose.material.icons.rounded.Straighten
 import androidx.compose.material.icons.rounded.Terminal
 import androidx.compose.material.icons.rounded.TextFields
@@ -95,6 +100,34 @@ object BuiltInApps {
         BuiltInApp(
             Screen.LEDGER, "Ledger", Icons.Rounded.AccountBalanceWallet, Color(0xFFC3A6FF),
             "Local income and spending totals"
+        ),
+        BuiltInApp(
+            Screen.CLEANER, "Cleaner", Icons.Rounded.CleaningServices, Color(0xFF6FE3FF),
+            "Real cache purge and media audit"
+        ),
+        BuiltInApp(
+            Screen.TORCH, "Torch", Icons.Rounded.FlashlightOn, Color(0xFFFFE082),
+            "Switch the camera flash directly"
+        ),
+        BuiltInApp(
+            Screen.LEVEL, "Level", Icons.Rounded.Straighten, Color(0xFF9BFFD9),
+            "Bubble level from the gravity sensor"
+        ),
+        BuiltInApp(
+            Screen.TIMELAB, "Time lab", Icons.Rounded.Public, Color(0xFF8FB4FF),
+            "Zones, epochs and date maths"
+        ),
+        BuiltInApp(
+            Screen.CIPHER, "Cipher", Icons.Rounded.Lock, Color(0xFFC3A6FF),
+            "AES-256-GCM text encryption"
+        ),
+        BuiltInApp(
+            Screen.SPEEDTEST, "Speed test", Icons.Rounded.Speed, Color(0xFFFFB0CF),
+            "Measured download throughput"
+        ),
+        BuiltInApp(
+            Screen.GENERATOR, "Generator", Icons.Rounded.Casino, Color(0xFF7CE38B),
+            "Passwords, dice and coins"
         ),
         BuiltInApp(
             Screen.SETTINGS, "Settings", Icons.Rounded.Settings, Color(0xFF8FB4FF),

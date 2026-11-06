@@ -1,8 +1,8 @@
 {
-  "versionName": "1.6.0",
-  "versionCode": 7,
-  "apkUrl": "https://github.com/itriedcoding/DroidOS/releases/download/v1.6.0/droidos-1.6.0-release.apk",
-  "sha256": "073cfed6827634194915999a7ff882fdfda0cf255cfec6757563954ec9962414",
-  "notes": "DroidOS 1.6.0 - six new apps: Convert, Digest, Text tools, Compass, Netcheck and Ledger. Also fixes the update installer, which failed because the FileProvider had no root for the downloaded APK.",
+  "versionName": "1.7.0",
+  "versionCode": 8,
+  "apkUrl": "https://github.com/itriedcoding/DroidOS/releases/download/v1.7.0/droidos-1.7.0-release.apk",
+  "sha256": "63cd53a6ef27af0b80a43bc97f47be9917f6decd5081b46fe82ca4f6d3341db4",
+  "notes": "DroidOS 1.7.0 - seven more apps including a full storage cleaner, plus a UI pass across the newer screens.",
   "mandatory": false
 }

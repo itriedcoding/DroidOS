@@ -14,7 +14,8 @@ and every failure path reports what actually happened instead of pretending to s
 **It is** a complete launcher-replacement shell plus first-party applications:
 a real `HOME` app that replaces your launcher, notification shade, lock screen, quick settings,
 recents view, file manager, notes app, encrypted vault, security scanner, firewall, calculator,
-terminal, sensor reader, converter, digest tools, text tools, compass, netcheck and ledger.
+terminal, sensor reader, converter, digest tools, text tools, compass, netcheck, ledger,
+cleaner, torch, level, time lab, cipher, speed test and generator.
 
 **It is not** a fork of the Android kernel or framework. Verified boot, full-disk encryption
 and the app sandbox come from the Android platform and the device firmware. A normal application
@@ -68,6 +69,21 @@ the kind of fake feature this project avoids.
   type, each timed, with the platform's error text when one fails
 * **Ledger** — income and spending in integer cents in a local SQLite database, with totals that
   cannot accumulate rounding error
+* **Cleaner** — capacity from `StorageStatsManager`, a real walk of every directory the app can
+  read, a cache purge whose freed bytes are measured before and after, and the media store's own
+  totals. Media deletion goes through `MediaStore.createDeleteRequest`, so the system confirms it
+* **Torch** — the camera flash through `CameraManager.setTorchMode`, following state changes made
+  elsewhere, and saying plainly when the device has no flash
+* **Level** — pitch and roll from the gravity vector (accelerometer fallback) with a low-pass
+  filter and a bubble that clamps at the rim
+* **Time lab** — live clocks in any zone, epoch and ISO parsing, offset labels that respect DST,
+  and whole-day date differences
+* **Cipher** — AES-256-GCM with PBKDF2-HMAC-SHA256 at 120,000 rounds, a fresh salt and IV per
+  message, and a GCM tag that rejects tampering
+* **Speed test** — a real HTTPS download streamed and counted byte by byte with a 25 MB cap,
+  reporting the measured rate rather than a guess
+* **Generator** — `SecureRandom` passwords with per-set guarantees and honest entropy maths, plus
+  dice and coin flips
 * **Clock** — alarms through `AlarmManager.setAlarmClock`, a timer that finishes in the
   background, and a stopwatch with laps. Exact alarms need the user-granted
   `SCHEDULE_EXACT_ALARM`, and Android cancels pending alarms if the app is force-stopped
@@ -333,7 +349,8 @@ firewall allow-list maths, volume step mapping, stopwatch accumulation, alarm ne
 scheduling, version comparison and formatting, terminal command parsing (quoting, `cd` path
 resolution, builtin detection, exit labels), sensor label/unit formatting, unit conversion factors,
 SHA/Base64 known-answer vectors, text statistics and regex replacement, compass cardinal names and
-circular smoothing, and money parsing with ledger totals.
+circular smoothing, money parsing with ledger totals, storage formatting, level trigonometry, time parsing and zone
+offsets, AES-GCM round trips and tamper rejection, password entropy and throughput maths.
 
 Instrumented tests (`app/src/androidTest`) require a device or emulator:
 
@@ -362,7 +379,7 @@ $ANDROID_HOME/build-tools/35.0.0/apksigner verify --print-certs \
 ```
 
 The `sha256` committed in `updates/channel.json` is the checksum of the release build above - the
-same file attached to release `v1.6.0`. Recompute it (`sha256sum`, or `shasum -a 256`) if you
+same file attached to release `v1.7.0`. Recompute it (`sha256sum`, or `shasum -a 256`) if you
 upload a different artifact, otherwise installed clients will reject the update.
 
 ---
@@ -374,10 +391,10 @@ must contain a valid `sha256` of the published APK. Replace the values and uploa
 to the URL in `apkUrl` when you publish a release; clients reject anything whose checksum or
 signing certificate does not match.
 
-Release `v1.6.0` carries `droidos-1.6.0-release.apk`, so an update check runs end to end:
+Release `v1.7.0` carries `droidos-1.7.0-release.apk`, so an update check runs end to end:
 manifest fetched, checksum compared, signing certificate matched against the installed app, and
 the system installer invoked. Download it from
-https://github.com/itriedcoding/DroidOS/releases/download/v1.6.0/droidos-1.6.0-release.apk
+https://github.com/itriedcoding/DroidOS/releases/download/v1.7.0/droidos-1.7.0-release.apk
 
 ---
 
