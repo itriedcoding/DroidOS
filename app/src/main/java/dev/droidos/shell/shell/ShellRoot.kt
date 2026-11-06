@@ -36,9 +36,12 @@ import dev.droidos.shell.apps.files.FilesScreen
 import dev.droidos.shell.apps.generator.GeneratorScreen
 import dev.droidos.shell.apps.ledger.LedgerScreen
 import dev.droidos.shell.apps.level.LevelScreen
+import dev.droidos.shell.apps.metronome.MetronomeScreen
+import dev.droidos.shell.apps.music.MusicScreen
 import dev.droidos.shell.apps.netcheck.NetcheckScreen
 import dev.droidos.shell.apps.notes.NotesScreen
 import dev.droidos.shell.apps.privacy.PrivacyScreen
+import dev.droidos.shell.apps.recorder.RecorderScreen
 import dev.droidos.shell.apps.scanner.ScannerScreen
 import dev.droidos.shell.apps.sensors.SensorsScreen
 import dev.droidos.shell.apps.speedtest.SpeedTestScreen
@@ -235,6 +238,9 @@ private fun ShellContent(
         Screen.CIPHER -> CipherScreen(onBack = back)
         Screen.SPEEDTEST -> SpeedTestScreen(onBack = back)
         Screen.GENERATOR -> GeneratorScreen(onBack = back)
+        Screen.MUSIC -> MusicScreen(onBack = back)
+        Screen.RECORDER -> RecorderScreen(onBack = back)
+        Screen.METRONOME -> MetronomeScreen(onBack = back)
     }
 }
 

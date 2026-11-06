@@ -15,7 +15,7 @@ and every failure path reports what actually happened instead of pretending to s
 a real `HOME` app that replaces your launcher, notification shade, lock screen, quick settings,
 recents view, file manager, notes app, encrypted vault, security scanner, firewall, calculator,
 terminal, sensor reader, converter, digest tools, text tools, compass, netcheck, ledger,
-cleaner, torch, level, time lab, cipher, speed test and generator.
+cleaner, torch, level, time lab, cipher, speed test, generator, music, recorder and metronome.
 
 **It is not** a fork of the Android kernel or framework. Verified boot, full-disk encryption
 and the app sandbox come from the Android platform and the device firmware. A normal application
@@ -84,6 +84,13 @@ the kind of fake feature this project avoids.
   reporting the measured rate rather than a guess
 * **Generator** — `SecureRandom` passwords with per-set guarantees and honest entropy maths, plus
   dice and coin flips
+* **Music** — lists the device's own MediaStore audio, plays it through `MediaPlayer` with a
+  seek bar, shuffle and three repeat modes, and exposes the audio session's equalizer presets and
+  per-band controls when the platform provides them
+* **Recorder** — captures AAC/MPEG-4 through `MediaRecorder`, lists what it saved with real
+  durations, plays it back and deletes it; a failed stop removes the unusable file
+* **Metronome** — two PCM clicks generated in memory and written to a streaming `AudioTrack`,
+  scheduled against `System.nanoTime()` with re-basing on overrun, plus tap tempo
 * **Clock** — alarms through `AlarmManager.setAlarmClock`, a timer that finishes in the
   background, and a stopwatch with laps. Exact alarms need the user-granted
   `SCHEDULE_EXACT_ALARM`, and Android cancels pending alarms if the app is force-stopped
@@ -350,7 +357,9 @@ scheduling, version comparison and formatting, terminal command parsing (quoting
 resolution, builtin detection, exit labels), sensor label/unit formatting, unit conversion factors,
 SHA/Base64 known-answer vectors, text statistics and regex replacement, compass cardinal names and
 circular smoothing, money parsing with ledger totals, storage formatting, level trigonometry, time parsing and zone
-offsets, AES-GCM round trips and tamper rejection, password entropy and throughput maths.
+offsets, AES-GCM round trips and tamper rejection, password entropy, throughput maths, music
+queue and repeat behaviour, recorder naming and size estimates, and tempo, accent and tap-tempo
+conversion.
 
 Instrumented tests (`app/src/androidTest`) require a device or emulator:
 
@@ -379,7 +388,7 @@ $ANDROID_HOME/build-tools/35.0.0/apksigner verify --print-certs \
 ```
 
 The `sha256` committed in `updates/channel.json` is the checksum of the release build above - the
-same file attached to release `v1.7.0`. Recompute it (`sha256sum`, or `shasum -a 256`) if you
+same file attached to release `v1.8.0`. Recompute it (`sha256sum`, or `shasum -a 256`) if you
 upload a different artifact, otherwise installed clients will reject the update.
 
 ---
@@ -391,10 +400,10 @@ must contain a valid `sha256` of the published APK. Replace the values and uploa
 to the URL in `apkUrl` when you publish a release; clients reject anything whose checksum or
 signing certificate does not match.
 
-Release `v1.7.0` carries `droidos-1.7.0-release.apk`, so an update check runs end to end:
+Release `v1.8.0` carries `droidos-1.8.0-release.apk`, so an update check runs end to end:
 manifest fetched, checksum compared, signing certificate matched against the installed app, and
 the system installer invoked. Download it from
-https://github.com/itriedcoding/DroidOS/releases/download/v1.7.0/droidos-1.7.0-release.apk
+https://github.com/itriedcoding/DroidOS/releases/download/v1.8.0/droidos-1.8.0-release.apk
 
 ---
 

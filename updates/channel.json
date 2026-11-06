@@ -1,8 +1,8 @@
 {
-  "versionName": "1.7.0",
-  "versionCode": 8,
-  "apkUrl": "https://github.com/itriedcoding/DroidOS/releases/download/v1.7.0/droidos-1.7.0-release.apk",
-  "sha256": "63cd53a6ef27af0b80a43bc97f47be9917f6decd5081b46fe82ca4f6d3341db4",
-  "notes": "DroidOS 1.7.0 - seven more apps including a full storage cleaner, plus a UI pass across the newer screens.",
+  "versionName": "1.8.0",
+  "versionCode": 9,
+  "apkUrl": "https://github.com/itriedcoding/DroidOS/releases/download/v1.8.0/droidos-1.8.0-release.apk",
+  "sha256": "02adadb33f3240ad507a545f81adb7f7cae2a271800344e3287fc948d62f6a36",
+  "notes": "DroidOS 1.8.0 - a real music player over the device's own library, a voice recorder and a drift-corrected metronome.",
   "mandatory": false
 }

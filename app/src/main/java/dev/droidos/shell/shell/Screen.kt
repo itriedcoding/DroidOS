@@ -48,7 +48,10 @@ enum class Screen(val title: String) {
     TIMELAB("Time lab"),
     CIPHER("Cipher"),
     SPEEDTEST("Speed test"),
-    GENERATOR("Generator")
+    GENERATOR("Generator"),
+    MUSIC("Music"),
+    RECORDER("Recorder"),
+    METRONOME("Metronome")
 }
 
 /** Simple, predictable back stack. Home is always at the bottom. */

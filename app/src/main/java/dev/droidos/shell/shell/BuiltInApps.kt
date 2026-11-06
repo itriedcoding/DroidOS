@@ -12,7 +12,10 @@ import androidx.compose.material.icons.rounded.Explore
 import androidx.compose.material.icons.rounded.Fingerprint
 import androidx.compose.material.icons.rounded.FlashlightOn
 import androidx.compose.material.icons.rounded.Folder
+import androidx.compose.material.icons.rounded.GraphicEq
 import androidx.compose.material.icons.rounded.Lock
+import androidx.compose.material.icons.rounded.Mic
+import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.NetworkCheck
 import androidx.compose.material.icons.rounded.Public
 import androidx.compose.material.icons.rounded.Sensors
@@ -128,6 +131,18 @@ object BuiltInApps {
         BuiltInApp(
             Screen.GENERATOR, "Generator", Icons.Rounded.Casino, Color(0xFF7CE38B),
             "Passwords, dice and coins"
+        ),
+        BuiltInApp(
+            Screen.MUSIC, "Music", Icons.Rounded.MusicNote, Color(0xFFFF6BA8),
+            "Plays the device's own library"
+        ),
+        BuiltInApp(
+            Screen.RECORDER, "Recorder", Icons.Rounded.Mic, Color(0xFFFF9F6B),
+            "Capture AAC audio to app storage"
+        ),
+        BuiltInApp(
+            Screen.METRONOME, "Metronome", Icons.Rounded.GraphicEq, Color(0xFF7CE38B),
+            "Generated clicks with tap tempo"
         ),
         BuiltInApp(
             Screen.SETTINGS, "Settings", Icons.Rounded.Settings, Color(0xFF8FB4FF),
