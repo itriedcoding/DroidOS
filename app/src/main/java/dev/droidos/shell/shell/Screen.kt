@@ -51,7 +51,15 @@ enum class Screen(val title: String) {
     GENERATOR("Generator"),
     MUSIC("Music"),
     RECORDER("Recorder"),
-    METRONOME("Metronome")
+    METRONOME("Metronome"),
+    SPOTIFY("Spotify"),
+    RELAY("Relay"),
+    POWER("Power"),
+    GALLERY("Gallery"),
+    WEATHER("Weather"),
+    HABITS("Habits"),
+    FLASHCARDS("Flashcards"),
+    FEEDS("Feeds")
 }
 
 /** Simple, predictable back stack. Home is always at the bottom. */

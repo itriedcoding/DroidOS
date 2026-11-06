@@ -20,6 +20,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.GraphicEq
+import androidx.compose.material.icons.rounded.Headphones
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
@@ -64,7 +65,7 @@ import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
 
 @Composable
-fun MusicScreen(onBack: () -> Unit) {
+fun MusicScreen(onBack: () -> Unit, onOpenSpotify: () -> Unit) {
     val context = LocalContext.current
     val library = remember { MusicLibrary(context) }
     val player = remember { MusicPlayer(context, library) }
@@ -176,6 +177,13 @@ fun MusicScreen(onBack: () -> Unit) {
         subtitle = if (tracks.isEmpty()) "Device library" else "${tracks.size} tracks on this device",
         onBack = onBack,
         actions = {
+            IconButton(onClick = onOpenSpotify) {
+                Icon(
+                    Icons.Rounded.Headphones,
+                    contentDescription = "Open Spotify",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
             IconButton(
                 onClick = { eqOpen = !eqOpen },
                 enabled = current != null

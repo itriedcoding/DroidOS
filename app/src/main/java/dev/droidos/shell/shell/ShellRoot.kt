@@ -32,15 +32,22 @@ import dev.droidos.shell.apps.clock.ClockScreen
 import dev.droidos.shell.apps.compass.CompassScreen
 import dev.droidos.shell.apps.convert.ConvertScreen
 import dev.droidos.shell.apps.digest.DigestScreen
+import dev.droidos.shell.apps.feeds.FeedsScreen
 import dev.droidos.shell.apps.files.FilesScreen
+import dev.droidos.shell.apps.flashcards.FlashcardsScreen
+import dev.droidos.shell.apps.gallery.GalleryScreen
 import dev.droidos.shell.apps.generator.GeneratorScreen
 import dev.droidos.shell.apps.ledger.LedgerScreen
 import dev.droidos.shell.apps.level.LevelScreen
 import dev.droidos.shell.apps.metronome.MetronomeScreen
+import dev.droidos.shell.apps.habits.HabitsScreen
 import dev.droidos.shell.apps.music.MusicScreen
+import dev.droidos.shell.apps.music.spotify.SpotifyScreen
 import dev.droidos.shell.apps.netcheck.NetcheckScreen
 import dev.droidos.shell.apps.notes.NotesScreen
+import dev.droidos.shell.apps.power.PowerScreen
 import dev.droidos.shell.apps.privacy.PrivacyScreen
+import dev.droidos.shell.apps.relay.RelayScreen
 import dev.droidos.shell.apps.recorder.RecorderScreen
 import dev.droidos.shell.apps.scanner.ScannerScreen
 import dev.droidos.shell.apps.sensors.SensorsScreen
@@ -50,6 +57,7 @@ import dev.droidos.shell.apps.texttools.TextToolsScreen
 import dev.droidos.shell.apps.timelab.TimeLabScreen
 import dev.droidos.shell.apps.torch.TorchScreen
 import dev.droidos.shell.apps.vault.VaultScreen
+import dev.droidos.shell.apps.weather.WeatherScreen
 import dev.droidos.shell.firewall.FirewallScreen
 import dev.droidos.shell.settings.AboutScreen
 import dev.droidos.shell.settings.AccessibilityScreen
@@ -238,9 +246,17 @@ private fun ShellContent(
         Screen.CIPHER -> CipherScreen(onBack = back)
         Screen.SPEEDTEST -> SpeedTestScreen(onBack = back)
         Screen.GENERATOR -> GeneratorScreen(onBack = back)
-        Screen.MUSIC -> MusicScreen(onBack = back)
+        Screen.MUSIC -> MusicScreen(onBack = back, onOpenSpotify = { open(Screen.SPOTIFY) })
         Screen.RECORDER -> RecorderScreen(onBack = back)
         Screen.METRONOME -> MetronomeScreen(onBack = back)
+        Screen.SPOTIFY -> SpotifyScreen(onBack = back)
+        Screen.RELAY -> RelayScreen(onBack = back)
+        Screen.POWER -> PowerScreen(onBack = back)
+        Screen.GALLERY -> GalleryScreen(onBack = back)
+        Screen.WEATHER -> WeatherScreen(onBack = back)
+        Screen.HABITS -> HabitsScreen(onBack = back)
+        Screen.FLASHCARDS -> FlashcardsScreen(onBack = back)
+        Screen.FEEDS -> FeedsScreen(onBack = back)
     }
 }
 

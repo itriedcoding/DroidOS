@@ -4,26 +4,34 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Notes
 import androidx.compose.material.icons.rounded.AccountBalanceWallet
 import androidx.compose.material.icons.rounded.Alarm
+import androidx.compose.material.icons.rounded.BatteryChargingFull
 import androidx.compose.material.icons.rounded.BugReport
 import androidx.compose.material.icons.rounded.Calculate
 import androidx.compose.material.icons.rounded.Casino
 import androidx.compose.material.icons.rounded.CleaningServices
+import androidx.compose.material.icons.rounded.Cloud
 import androidx.compose.material.icons.rounded.Explore
+import androidx.compose.material.icons.rounded.Forum
 import androidx.compose.material.icons.rounded.Fingerprint
 import androidx.compose.material.icons.rounded.FlashlightOn
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material.icons.rounded.GraphicEq
+import androidx.compose.material.icons.rounded.Headphones
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.Mic
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.NetworkCheck
+import androidx.compose.material.icons.rounded.PhotoLibrary
 import androidx.compose.material.icons.rounded.Public
+import androidx.compose.material.icons.rounded.RssFeed
 import androidx.compose.material.icons.rounded.Sensors
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Shield
 import androidx.compose.material.icons.rounded.Speed
 import androidx.compose.material.icons.rounded.Straighten
+import androidx.compose.material.icons.rounded.Style
 import androidx.compose.material.icons.rounded.Terminal
+import androidx.compose.material.icons.rounded.Whatshot
 import androidx.compose.material.icons.rounded.TextFields
 import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.ui.graphics.Color
@@ -143,6 +151,38 @@ object BuiltInApps {
         BuiltInApp(
             Screen.METRONOME, "Metronome", Icons.Rounded.GraphicEq, Color(0xFF7CE38B),
             "Generated clicks with tap tempo"
+        ),
+        BuiltInApp(
+            Screen.SPOTIFY, "Spotify", Icons.Rounded.Headphones, Color(0xFF7CE38B),
+            "Your own Spotify account, remote controlled"
+        ),
+        BuiltInApp(
+            Screen.RELAY, "Relay", Icons.Rounded.Forum, Color(0xFF8FB4FF),
+            "Discord bot bridge for your servers"
+        ),
+        BuiltInApp(
+            Screen.POWER, "Power", Icons.Rounded.BatteryChargingFull, Color(0xFF7CE38B),
+            "Live battery telemetry"
+        ),
+        BuiltInApp(
+            Screen.GALLERY, "Gallery", Icons.Rounded.PhotoLibrary, Color(0xFFFF9EC4),
+            "Every image MediaStore knows about"
+        ),
+        BuiltInApp(
+            Screen.WEATHER, "Weather", Icons.Rounded.Cloud, Color(0xFF9FE8FF),
+            "Open-Meteo forecasts, no key needed"
+        ),
+        BuiltInApp(
+            Screen.HABITS, "Habits", Icons.Rounded.Whatshot, Color(0xFFFF9F6B),
+            "Daily streaks kept in SQLite"
+        ),
+        BuiltInApp(
+            Screen.FLASHCARDS, "Flashcards", Icons.Rounded.Style, Color(0xFFC3A6FF),
+            "SM-2 spaced repetition"
+        ),
+        BuiltInApp(
+            Screen.FEEDS, "Feeds", Icons.Rounded.RssFeed, Color(0xFFFFC76B),
+            "RSS and Atom reader"
         ),
         BuiltInApp(
             Screen.SETTINGS, "Settings", Icons.Rounded.Settings, Color(0xFF8FB4FF),

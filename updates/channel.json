@@ -1,8 +1,8 @@
 {
-  "versionName": "1.8.0",
-  "versionCode": 9,
-  "apkUrl": "https://github.com/itriedcoding/DroidOS/releases/download/v1.8.0/droidos-1.8.0-release.apk",
-  "sha256": "02adadb33f3240ad507a545f81adb7f7cae2a271800344e3287fc948d62f6a36",
-  "notes": "DroidOS 1.8.0 - a real music player over the device's own library, a voice recorder and a drift-corrected metronome.",
+  "versionName": "1.9.0",
+  "versionCode": 10,
+  "apkUrl": "https://github.com/itriedcoding/DroidOS/releases/download/v1.9.0/droidos-1.9.0-release.apk",
+  "sha256": "134580c640c031cf5067a3f9541d21d02135e91c4dcaddb75173cd35046037ad",
+  "notes": "DroidOS 1.9.0 - Spotify over PKCE, a Discord bot bridge and six more working apps.",
   "mandatory": false
 }

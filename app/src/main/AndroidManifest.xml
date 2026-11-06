@@ -74,6 +74,17 @@
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+
+            <!-- Spotify (PKCE) returns to this scheme. Register the same value in the
+                 Spotify developer dashboard as the app's redirect URI. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="spotify-callback"
+                    android:scheme="droidos" />
+            </intent-filter>
         </activity>
 
         <!-- Real notification access: reads and dismisses live system notifications. -->

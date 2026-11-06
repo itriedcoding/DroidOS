@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.droidos.shell.apps.music.spotify.SpotifyAuthBridge
 import dev.droidos.shell.core.AppLog
 import dev.droidos.shell.shell.Screen
 import dev.droidos.shell.shell.ShellRoot
@@ -28,6 +29,7 @@ class MainActivity : FragmentActivity() {
         enableEdgeToEdge()
         val initial = resolveDeepLink(intent)
         AppLog.i("MainActivity", "onCreate deepLink=${initial ?: "none"}")
+        SpotifyAuthBridge.deliver(intent?.data?.toString())
 
         setContent {
             val settings by viewModel.settings.collectAsStateWithLifecycle()
@@ -40,6 +42,7 @@ class MainActivity : FragmentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
+        SpotifyAuthBridge.deliver(intent.data?.toString())
     }
 
     /** Supports the launcher shortcuts declared in res/xml/shortcuts.xml. */

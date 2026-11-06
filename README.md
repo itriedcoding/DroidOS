@@ -91,6 +91,26 @@ the kind of fake feature this project avoids.
   durations, plays it back and deletes it; a failed stop removes the unusable file
 * **Metronome** — two PCM clicks generated in memory and written to a streaming `AudioTrack`,
   scheduled against `System.nanoTime()` with re-basing on overrun, plus tap tempo
+* **Spotify** — Authorization Code + PKCE against your own Spotify developer app, because a public
+  APK cannot hold a client secret. The access and refresh tokens are sealed with an Android
+  Keystore key, search goes through the Web API, and playback is driven on your active device.
+  Control needs Premium, and the screen says so instead of pretending to play
+* **Relay** — an unaffiliated Discord bot bridge over the official REST v10 API with your own bot
+  token: server and channel lists, live channel history and sending. User-account tokens are
+  refused, because automating a personal account breaks Discord's terms
+* **Power** — battery level, status, health, temperature, voltage, current, charge counter and a
+  remaining-time estimate from `BatteryManager` and `ACTION_BATTERY_CHANGED`; readings the device
+  does not expose show `--` rather than an invented number
+* **Gallery** — images from `MediaStore` in a grid with downsampled decoding, a full-screen viewer
+  with pinch zoom, capture dates and file sizes
+* **Weather** — Open-Meteo geocoding and a seven-day forecast. No key and no account, and any HTTP
+  failure is reported as it happened
+* **Habits** — habits and daily check-ins in SQLite, with current streak, best streak and 30-day
+  completion
+* **Flashcards** — one collection scheduled with SM-2: a grade moves the ease factor and the due
+  date, and lapsed cards return the next day
+* **Feeds** — RSS 2.0 and Atom fetched over HTTP and parsed with `XmlPullParser`, deduplicated by
+  link and opened in the browser
 * **Clock** — alarms through `AlarmManager.setAlarmClock`, a timer that finishes in the
   background, and a stopwatch with laps. Exact alarms need the user-granted
   `SCHEDULE_EXACT_ALARM`, and Android cancels pending alarms if the app is force-stopped
